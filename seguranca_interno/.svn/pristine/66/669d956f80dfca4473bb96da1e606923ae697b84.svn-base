@@ -1,0 +1,41 @@
+<?page title="Login - Segurança - TCE/MA" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+
+<zk>
+	<include src="/layout/header.zul" />
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.LoginVM')"
+		onOK="@command('login')">
+		<div align="center" style="margin-top:1%">
+			<image src="/imagens/tce.png" />
+			<panel width="600px" border="normal"
+				sclass="custom-panel">
+				<panelchildren>
+					<vbox align="center">
+						<vbox align="center" spacing="1px">
+							<label value="Segurança"
+								sclass="custom-label-login-1" />
+							<label value="Acessos e Permissões"
+								sclass="custom-label-login-2" />
+						</vbox>
+						<vbox align="center">
+							<intbox value="@bind(vm.login)" width="200px"
+								focus="true" maxlength="11" placeholder="Login (Matrícula)" />
+							<textbox value="@bind(vm.senha)" width="200px"
+								type="password" placeholder="Senha" />
+							<button label="Entrar"
+								onClick="@command('login')" />
+						</vbox>
+					</vbox>
+				</panelchildren>
+			</panel>
+		</div>
+
+		<div align="center" sclass="custom-footer">
+			<label style="font-size: 14px">
+				2019 © Copyright Superintendência de Tecnologia -
+				Tribunal de Contas do Estado do Maranhão
+			</label>
+		</div>
+	</window>
+</zk>

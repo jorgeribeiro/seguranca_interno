@@ -1,0 +1,441 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.servidor;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * 
+ * @author acbras
+ * 
+ *         Schema: SQLUser Tabela: RHCadServidor + RHCadPessoa +
+ *         RHCadServidorFuncional
+ *
+ */
+
+@Entity(name = Servidor.NAME)
+@Table(name = "seguranca_interno.servidor")
+public class Servidor {
+
+	public static final String NAME = "SEGURANCA_SERVIDOR";
+
+	public Servidor() {
+
+	}
+	
+	public Servidor(Integer servidorId, String lotacaoContracheque, String lotacaoOrigem, Integer lotacaoExercicioId,
+			String lotacaoExercicio, Integer cargoFuncaoId, String cargoFuncao, String cargoEfetivo, String setorSigla,
+			Integer matricula, String nome, String cpf, Date dataNascimento, String tipoSanguineo, String doador,
+			String email, String dataAdmissao, String sexo, String telefone, String lotacaoExercicioTelefone,
+			Integer funcaoHierarquia, Integer lotacaoSubordinacao) {
+		super();
+		this.servidorId = servidorId;
+		this.lotacaoContracheque = lotacaoContracheque;
+		this.lotacaoOrigem = lotacaoOrigem;
+		this.lotacaoExercicioId = lotacaoExercicioId;
+		this.lotacaoExercicio = lotacaoExercicio;
+		this.cargoFuncaoId = cargoFuncaoId;
+		this.cargoFuncao = cargoFuncao;
+		this.cargoEfetivo = cargoEfetivo;
+		this.setorSigla = setorSigla;
+		this.matricula = matricula;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
+		this.tipoSanguineo = tipoSanguineo;
+		this.doador = doador;
+		this.email = email;
+		this.dataAdmissao = dataAdmissao;
+		this.sexo = sexo;
+		this.telefone = telefone;
+		this.lotacaoExercicioTelefone = lotacaoExercicioTelefone;
+		this.funcaoHierarquia = funcaoHierarquia;
+		this.lotacaoSubordinacao = lotacaoSubordinacao;
+	}
+
+
+
+
+
+	@Id
+	@Column(name = "servidor_id")
+	private Integer servidorId;
+
+	@Column(name = "lotacao_contracheque")
+	private String lotacaoContracheque;
+
+	@Column(name = "lotacao_origem")
+	private String lotacaoOrigem;
+
+	@Column(name = "lotacao_exercicio_id")
+	private Integer lotacaoExercicioId;
+
+	@Column(name = "lotacao_exercicio")
+	private String lotacaoExercicio;
+	
+	@Column(name = "cargo_funcao_id")
+	private Integer cargoFuncaoId;
+
+	@Column(name = "cargo_funcao")
+	private String cargoFuncao;
+	
+	@Column(name = "cargo_efetivo")
+	private String cargoEfetivo;
+	
+	@Column(name = "setor_sigla")
+	private String setorSigla;
+
+	@Column(name = "matricula")
+	private Integer matricula;
+
+	@Column(name = "nome")
+	private String nome;
+
+	@Column(name = "cpf")
+	private String cpf;
+
+	@Column(name = "data_nascimento")
+	private Date dataNascimento;
+
+	@Column(name = "tipo_sanguineo")
+	private String tipoSanguineo;
+
+	@Column(name = "doador")
+	private String doador;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "data_admissao")
+	private String dataAdmissao;
+
+	@Column(name = "sexo")
+	private String sexo;
+
+	@Column(name = "telefone")
+	private String telefone;
+	
+	@Column(name = "lotacaoexercicio_telefone")
+	private String lotacaoExercicioTelefone;
+	
+	@Column(name = "funcao_hierarquia")
+	private Integer funcaoHierarquia;
+	
+	@Column(name = "lotacao_subordinacao")
+	private Integer lotacaoSubordinacao;
+
+	@Override
+	public String toString() {
+		return "Servidor [servidorId=" + servidorId + ", lotacaoContracheque=" + lotacaoContracheque
+				+ ", lotacaoOrigem=" + lotacaoOrigem + ", lotacaoExercicioId=" + lotacaoExercicioId
+				+ ", lotacaoExercicio=" + lotacaoExercicio + ", cargoFuncaoId=" + cargoFuncaoId + ", cargoFuncao="
+				+ cargoFuncao + ", cargoEfetivo=" + cargoEfetivo + ", setorSigla=" + setorSigla + ", matricula="
+				+ matricula + ", nome=" + nome + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento
+				+ ", tipoSanguineo=" + tipoSanguineo + ", doador=" + doador + ", email=" + email + ", dataAdmissao="
+				+ dataAdmissao + ", sexo=" + sexo + ", telefone=" + telefone + ", lotacaoExercicioTelefone="
+				+ lotacaoExercicioTelefone + ", funcaoHierarquia=" + funcaoHierarquia + ", lotacaoSubordinacao="
+				+ lotacaoSubordinacao + "]";
+	}
+
+	public Integer getServidorId() {
+		return servidorId;
+	}
+
+	public void setServidorId(Integer servidorId) {
+		this.servidorId = servidorId;
+	}
+
+	public String getLotacaoContracheque() {
+		return lotacaoContracheque;
+	}
+
+	public void setLotacaoContracheque(String lotacaoContracheque) {
+		this.lotacaoContracheque = lotacaoContracheque;
+	}
+
+	public String getLotacaoOrigem() {
+		return lotacaoOrigem;
+	}
+
+	public void setLotacaoOrigem(String lotacaoOrigem) {
+		this.lotacaoOrigem = lotacaoOrigem;
+	}
+
+	public Integer getLotacaoExercicioId() {
+		return lotacaoExercicioId;
+	}
+
+	public void setLotacaoExercicioId(Integer lotacaoExercicioId) {
+		this.lotacaoExercicioId = lotacaoExercicioId;
+	}
+
+	public String getLotacaoExercicio() {
+		return lotacaoExercicio;
+	}
+
+	public void setLotacaoExercicio(String lotacaoExercicio) {
+		this.lotacaoExercicio = lotacaoExercicio;
+	}
+
+	public Integer getCargoFuncaoId() {
+		return cargoFuncaoId;
+	}
+
+	public void setCargoFuncaoId(Integer cargoFuncaoId) {
+		this.cargoFuncaoId = cargoFuncaoId;
+	}
+
+	public String getCargoFuncao() {
+		return cargoFuncao;
+	}
+
+	public void setCargoFuncao(String cargoFuncao) {
+		this.cargoFuncao = cargoFuncao;
+	}
+
+	public String getCargoEfetivo() {
+		return cargoEfetivo;
+	}
+
+	public void setCargoEfetivo(String cargoEfetivo) {
+		this.cargoEfetivo = cargoEfetivo;
+	}
+
+	public String getSetorSigla() {
+		return setorSigla;
+	}
+
+	public void setSetorSigla(String setorSigla) {
+		this.setorSigla = setorSigla;
+	}
+
+	public Integer getMatricula() {
+		return matricula;
+	}
+
+	public void setMatricula(Integer matricula) {
+		this.matricula = matricula;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public String getTipoSanguineo() {
+		return tipoSanguineo;
+	}
+
+	public void setTipoSanguineo(String tipoSanguineo) {
+		this.tipoSanguineo = tipoSanguineo;
+	}
+
+	public String getDoador() {
+		return doador;
+	}
+
+	public void setDoador(String doador) {
+		this.doador = doador;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDataAdmissao() {
+		return dataAdmissao;
+	}
+
+	public void setDataAdmissao(String dataAdmissao) {
+		this.dataAdmissao = dataAdmissao;
+	}
+
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getLotacaoExercicioTelefone() {
+		return lotacaoExercicioTelefone;
+	}
+
+	public void setLotacaoExercicioTelefone(String lotacaoExercicioTelefone) {
+		this.lotacaoExercicioTelefone = lotacaoExercicioTelefone;
+	}
+
+	public Integer getFuncaoHierarquia() {
+		return funcaoHierarquia;
+	}
+
+	public void setFuncaoHierarquia(Integer funcaoHierarquia) {
+		this.funcaoHierarquia = funcaoHierarquia;
+	}
+
+	public Integer getLotacaoSubordinacao() {
+		return lotacaoSubordinacao;
+	}
+
+	public void setLotacaoSubordinacao(Integer lotacaoSubordinacao) {
+		this.lotacaoSubordinacao = lotacaoSubordinacao;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Servidor other = (Servidor) obj;
+		if (cargoEfetivo == null) {
+			if (other.cargoEfetivo != null)
+				return false;
+		} else if (!cargoEfetivo.equals(other.cargoEfetivo))
+			return false;
+		if (cargoFuncao == null) {
+			if (other.cargoFuncao != null)
+				return false;
+		} else if (!cargoFuncao.equals(other.cargoFuncao))
+			return false;
+		if (cargoFuncaoId == null) {
+			if (other.cargoFuncaoId != null)
+				return false;
+		} else if (!cargoFuncaoId.equals(other.cargoFuncaoId))
+			return false;
+		if (cpf == null) {
+			if (other.cpf != null)
+				return false;
+		} else if (!cpf.equals(other.cpf))
+			return false;
+		if (dataAdmissao == null) {
+			if (other.dataAdmissao != null)
+				return false;
+		} else if (!dataAdmissao.equals(other.dataAdmissao))
+			return false;
+		if (dataNascimento == null) {
+			if (other.dataNascimento != null)
+				return false;
+		} else if (!dataNascimento.equals(other.dataNascimento))
+			return false;
+		if (doador == null) {
+			if (other.doador != null)
+				return false;
+		} else if (!doador.equals(other.doador))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (funcaoHierarquia == null) {
+			if (other.funcaoHierarquia != null)
+				return false;
+		} else if (!funcaoHierarquia.equals(other.funcaoHierarquia))
+			return false;
+		if (lotacaoContracheque == null) {
+			if (other.lotacaoContracheque != null)
+				return false;
+		} else if (!lotacaoContracheque.equals(other.lotacaoContracheque))
+			return false;
+		if (lotacaoExercicio == null) {
+			if (other.lotacaoExercicio != null)
+				return false;
+		} else if (!lotacaoExercicio.equals(other.lotacaoExercicio))
+			return false;
+		if (lotacaoExercicioId == null) {
+			if (other.lotacaoExercicioId != null)
+				return false;
+		} else if (!lotacaoExercicioId.equals(other.lotacaoExercicioId))
+			return false;
+		if (lotacaoExercicioTelefone == null) {
+			if (other.lotacaoExercicioTelefone != null)
+				return false;
+		} else if (!lotacaoExercicioTelefone.equals(other.lotacaoExercicioTelefone))
+			return false;
+		if (lotacaoOrigem == null) {
+			if (other.lotacaoOrigem != null)
+				return false;
+		} else if (!lotacaoOrigem.equals(other.lotacaoOrigem))
+			return false;
+		if (lotacaoSubordinacao == null) {
+			if (other.lotacaoSubordinacao != null)
+				return false;
+		} else if (!lotacaoSubordinacao.equals(other.lotacaoSubordinacao))
+			return false;
+		if (matricula == null) {
+			if (other.matricula != null)
+				return false;
+		} else if (!matricula.equals(other.matricula))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (servidorId == null) {
+			if (other.servidorId != null)
+				return false;
+		} else if (!servidorId.equals(other.servidorId))
+			return false;
+		if (setorSigla == null) {
+			if (other.setorSigla != null)
+				return false;
+		} else if (!setorSigla.equals(other.setorSigla))
+			return false;
+		if (sexo == null) {
+			if (other.sexo != null)
+				return false;
+		} else if (!sexo.equals(other.sexo))
+			return false;
+		if (telefone == null) {
+			if (other.telefone != null)
+				return false;
+		} else if (!telefone.equals(other.telefone))
+			return false;
+		if (tipoSanguineo == null) {
+			if (other.tipoSanguineo != null)
+				return false;
+		} else if (!tipoSanguineo.equals(other.tipoSanguineo))
+			return false;
+		return true;
+	}
+
+}

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="usuarios_grupo" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4d6f7b58-e0f2-4b65-bcb9-f0db004a1231">
+	<parameter name="DATA_CRIACAO" class="java.lang.String"/>
+	<parameter name="NOME_GRUPO" class="java.lang.String"/>
+	<parameter name="IMAGE_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="matricula" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="lotacao" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="140" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement isPrintRepeatedValues="false" x="189" y="30" width="180" height="50" uuid="da90df28-5dca-4284-8cf4-d550251e4a9f"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR}+"/tce.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="180" y="80" width="196" height="30" forecolor="#1E56A6" uuid="f94035e5-b840-42f3-8148-19d12632a0b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Segurança]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="360" y="0" width="198" height="19" uuid="94cf45ea-f05f-4147-8411-bb9c030e00e0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data/hora de geração: " + $P{DATA_CRIACAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="ContainerHeight" x="40" y="110" width="480" height="20" forecolor="#000000" uuid="3fd13659-fd0b-4732-afa0-17a5f16a91ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório de Usuários do Grupo " + $P{NOME_GRUPO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="40" y="0" width="150" height="20" forecolor="#FFFFFF" backcolor="#1E56A6" uuid="0d3e370d-2f76-492b-b83d-28d560c54be9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[NOME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="190" y="0" width="60" height="20" forecolor="#FFFFFF" backcolor="#1E56A6" uuid="eee5ebfd-0590-4149-b4e8-8549d5adc547"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[MATRÍCULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="370" y="0" width="170" height="20" forecolor="#FFFFFF" backcolor="#1E56A6" uuid="894316fb-705b-480f-9b32-3b4429bbc262"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[LOTAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="0" width="120" height="20" forecolor="#FFFFFF" backcolor="#1E56A6" uuid="e09c162a-00d0-4d35-b6c7-2493c5ed9f15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[E-MAIL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="19" y="0" width="21" height="20" forecolor="#FFFFFF" backcolor="#1E56A6" uuid="8ce05dff-958e-4c83-8f74-679637b9136c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="40" y="0" width="150" height="20" uuid="ef1fc8b2-9c3b-4b97-a344-ae80f7d510c8"/>
+				<box>
+					<pen lineColor="#BFBFBF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="0" width="60" height="20" uuid="3501997e-2d88-472e-b7ae-e321e8eeb6ce"/>
+				<box>
+					<pen lineColor="#BFBFBF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{matricula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="120" height="20" uuid="8d63be0f-b836-4b32-90bf-3379400b1976"/>
+				<box>
+					<pen lineColor="#BFBFBF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="0" width="170" height="20" uuid="c1a09050-04c7-4533-87ab-6b50a21b94cb"/>
+				<box>
+					<pen lineColor="#BFBFBF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lotacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="0" width="21" height="20" uuid="8e468ecb-a722-462d-b243-f26ca61e44e8"/>
+				<box>
+					<pen lineColor="#BFBFBF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="53" splitType="Stretch">
+			<line>
+				<reportElement x="17" y="10" width="526" height="1" uuid="34caf9c3-6909-4d5d-a8d5-d5602dec7f23"/>
+			</line>
+			<textField>
+				<reportElement x="190" y="14" width="149" height="20" uuid="2696ad50-8dfc-4e8e-b015-fc33c62e7a2b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="69">
+			<textField>
+				<reportElement x="190" y="39" width="149" height="20" uuid="33ee470f-44c5-40a7-9c93-7e8d2342daa6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="17" y="35" width="526" height="1" uuid="1e87b6cd-47e3-43ad-a3c7-810b9ae23ba6"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="31" y="6" width="499" height="20" forecolor="#FFFFFF" backcolor="#1E56A6" uuid="d0c4ade3-08e2-4f98-9ea3-4125a86b590c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Relatório gerado pelo sistema Segurança - Acessos e Permissões]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

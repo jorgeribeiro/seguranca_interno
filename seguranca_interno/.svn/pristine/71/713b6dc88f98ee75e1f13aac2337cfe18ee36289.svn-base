@@ -1,0 +1,172 @@
+<?page title="Segurança - TCE/MA - Sistema"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.GrupoUsuarioVM')"
+		title="Grupo Usuário" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<button label="Novo grupo"
+					iconSclass="fas fa-plus-circle"
+					onClick="@command('abrirModalNovoGrupo', visible=true)" />
+				<grid model="@load(vm.sistemas)" mold="paging"
+					pageSize="10">
+					<columns>
+						<column label="Nome" align="center" />
+						<column label="Sigla" align="center"
+							width="400px" />
+						<column label="Ações" align="center"
+							width="200px" />
+					</columns>
+					<template name="model" var="sistema">
+						<row>
+							<label value="@load(sistema.nome)" />
+							<label value="@load(sistema.sigla)" />
+							<div align="center">
+								<button label="Visualizar grupos"
+									iconSclass="fas fa-eye"
+									onClick="@command('abrirModalVisualizarGrupos', visible=true, sistema=sistema)" />
+							</div>
+						</row>
+					</template>
+				</grid>
+			</vlayout>
+
+			<window id="modalNovoGrupo" mode="modal" visible="false"
+				sclass="custom-window">
+				<vbox align="left">
+					<label value="Novo grupo" sclass="custom-title" />
+					<vlayout spacing="1px">
+						<label value="Sistema:"
+							style="font-weight:bold" />
+						<combobox id="comboSistemas"
+							selectedItem="@bind(vm.novoGrupo.sistema)"
+							model="@load(vm.sistemas)">
+							<template name="model" var="sistema">
+								<comboitem label="@load(sistema.nome)"
+									value="@load(sistema)" />
+							</template>
+						</combobox>
+					</vlayout>
+					<vlayout spacing="1px">
+						<label value="Nome:" style="font-weight:bold" />
+						<textbox value="@bind(vm.novoGrupo.nome)" />
+					</vlayout>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalNovoGrupo', visible=false)" />
+						<button tooltiptext="Incluir grupo"
+							style="font-weight:bold" label="INCLUIR GRUPO"
+							iconSclass="fas fa-plus-circle"
+							onClick="@command('incluirGrupo')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalVisualizarGrupos" mode="modal"
+				width="500px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Visualizar grupos por sistema"
+						sclass="custom-title" />
+					<vlayout spacing="1px" style="line-height:0px">
+						<label value="Sistema:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.sistemaSelecionado.nome)" />
+					</vlayout>
+					<grid model="@load(vm.gruposSistema)" mold="paging"
+						pageSize="5" emptyMessage="Nenhum grupo encontrado.">
+						<columns>
+							<column label="Nome" align="center" />
+							<column label="Ações" align="center" />
+						</columns>
+						<template name="model" var="grupo">
+							<row>
+								<label value="@load(grupo.nome)" />
+								<button
+									label="Visualizar usuários do grupo" iconSclass="fas fa-eye"
+									onClick="@command('abrirModalVisualizarUsuarios', visible=true, grupo=grupo)" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVisualizarGrupos', visible=false, sistema=null)" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalVisualizarUsuarios" mode="modal"
+				width="600px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Visualizar usuários por grupo"
+						sclass="custom-title" />
+					<vlayout spacing="1px" style="line-height:0px">
+						<label value="Grupo - Sistema:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.grupoSelecionado.nomeGrupoSistema)" />
+					</vlayout>
+					<grid model="@load(vm.usuariosGrupo)" mold="paging"
+						pageSize="5" emptyMessage="Nenhum usuário encontrado.">
+						<columns>
+							<column label="Nome" align="center" />
+							<column label="Remover do grupo"
+								align="center" width="150px" />
+						</columns>
+						<template name="model" var="usuarioGrupo">
+							<row>
+								<label
+									value="@load(usuarioGrupo.usuario.nome)" />
+								<button
+									onClick="@command('abrirModalConfirmaRemoverDoGrupo', visible=true, usuarioGrupo=usuarioGrupo)"
+									iconSclass="fas fa-minus-circle" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVisualizarUsuarios', visible=false, sistema=null)" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalConfirmaRemoverDoGrupo" mode="modal"
+				visible="false" sclass="custom-window">
+				<vbox align="center">
+					<label value="Remover este usuário do grupo?" />
+					<label style="font-weight:bold"
+						value="@load(vm.usuarioGrupoSelecionado.usuario.nome)" />
+					<label style="font-weight:bold"
+						value="@load(vm.usuarioGrupoSelecionado.grupoUsuario.nomeGrupoSistema)" />
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalConfirmaRemoverDoGrupo', visible=false, usuarioGrupo=null)" />
+						<button tooltiptext="Remover do grupo"
+							style="font-weight:bold" label="REMOVER DO GRUPO"
+							iconSclass="fas fa-minus-circle"
+							onClick="@command('removerDoGrupo')" />
+					</div>
+				</vbox>
+			</window>
+		</panelchildren>
+	</panel>
+</zk>

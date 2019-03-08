@@ -1,0 +1,122 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.usuario;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.Servidor;
+
+/**
+ * 
+ * @author acbras
+ * 
+ *         Schema: Seguranca Tabela: USUARIO
+ *
+ */
+
+@Entity(name = Usuario.NAME)
+@Table(name = "seguranca_interno.usuario")
+public class Usuario {
+
+	public static final String NAME = "SEGURANCA_INTERNO_USUARIO";
+
+	@Id
+	@SequenceGenerator(name = "seguranca_interno.seq_usuario", sequenceName = "seguranca_interno.seq_usuario", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seguranca_interno.seq_usuario")
+	@Column(name = "usuario_id")
+	private Integer usuarioId;
+
+	@ManyToOne
+	@JoinColumn(name = "servidor_id")
+	private Servidor servidor;
+
+	@Column(name = "matricula")
+	private Integer matricula;
+
+	@Column(name = "senha")
+	private String senha;
+	
+	@Transient
+	public String getNomeMatricula() {
+		try {
+			return servidor.getNome() + " (" + matricula + ")";
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	@Transient
+	public String getNome() {
+		try {
+			return servidor.getNome();
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	@Transient
+	public String getSetor() {
+		try {
+			if (servidor.getLotacaoExercicio() != null) {
+				return servidor.getLotacaoExercicio();
+			} else {
+				return "-";
+			}
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	@Transient
+	public String getTelefone() {
+		try {
+			if (servidor.getTelefone() != null) {
+				return servidor.getTelefone();
+			} else {
+				return "-";
+			}
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+
+	public Integer getMatricula() {
+		return matricula;
+	}
+
+	public void setMatricula(Integer matricula) {
+		this.matricula = matricula;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public Servidor getServidor() {
+		return servidor;
+	}
+
+	public void setServidor(Servidor servidor) {
+		this.servidor = servidor;
+	}
+
+}

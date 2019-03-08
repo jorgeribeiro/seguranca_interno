@@ -1,0 +1,16 @@
+<?page title="Sessão finalizada - Segurança - TCE/MA" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+
+<zk>
+	<include src="/layout/header.zul" />
+	<panel title="Sua sessão foi finalizada!" border="normal">
+		<panelchildren>
+			<vlayout>
+				<label
+					value="Devido a inatividade ou algum problema operacional, sua sessão foi finalizada." />
+				<button label="Ir para a tela de login"
+					href="/login.zul" />
+			</vlayout>
+		</panelchildren>
+	</panel>
+</zk>

@@ -1,0 +1,34 @@
+<?page title="Organograma - Tribunal de Contas do Estado do Maranhão" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<zk>
+	<window id="win" border="none" width="640px"
+		apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') 
+		@init('br.gov.ma.tce.seguranca.pages.ListaOrganogramaVM')">
+
+		<hbox>
+			<listbox id="boxServidor" width="630px" selectedItem="@bind(vm.servidor)"
+				model="@bind(vm.servidores)">
+				<listhead>
+					<listheader label="Nome" />
+					<listheader label="Cargo" />
+					<listheader label="Lotação" width="110px" />
+					<listheader label="Telefone" width="110px" />
+				</listhead>
+				<template name="model" var="servidor" >
+					<listitem height="30px">
+						<listcell label="@load(servidor.nome)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+						<listcell label="@load(servidor.cargoFuncao)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+<!-- 						<listcell style="font-size:10px;" label="@load(servidor.lotacaoOrigem)" /> -->
+<!-- 						<listcell style="font-size:10px;" label="@load(servidor.telefone)" /> -->
+						<listcell label="@load(servidor.lotacaoExercicio)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+						<listcell label="@load(servidor.telefone)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+					</listitem>
+				</template>
+			</listbox>
+		</hbox>
+	</window>
+</zk>

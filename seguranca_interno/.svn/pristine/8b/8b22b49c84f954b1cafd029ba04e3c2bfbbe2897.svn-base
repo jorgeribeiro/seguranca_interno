@@ -1,0 +1,35 @@
+<?page title="Segurança - TCE/MA"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.IndexVM')"
+		title="Início" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<panel>
+					<panelchildren>
+						<vlayout spacing="1px">
+							<label
+								value="Segurança - Acessos e Permissões"
+								sclass="custom-label-1" />
+							<hlayout>
+								<label value="Usuário: " />
+								<label
+									value="@load(vm.usuario.nomeMatricula)" />
+							</hlayout>
+							<label
+								value="Utilize o sistema pelas opções do menu superior." />
+
+							<separator />
+							<button label="Verificar novos usuários"
+								iconSclass="fas fa-sync-alt"
+								onClick="@command('verificarNovosUsuarios')" />
+						</vlayout>
+					</panelchildren>
+				</panel>
+			</vlayout>
+		</panelchildren>
+	</panel>
+</zk>

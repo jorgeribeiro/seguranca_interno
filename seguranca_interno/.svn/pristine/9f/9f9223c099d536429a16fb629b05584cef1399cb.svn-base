@@ -1,0 +1,51 @@
+<?page title="Segurança - TCE/MA - Usuário"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.UsuarioVM')"
+		title="Usuário" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<hlayout>
+					<textbox value="@bind(vm.matricula)"
+						placeholder="Matrícula" onOK="@command('aplicarFiltro')" />
+					<textbox value="@bind(vm.nome)" placeholder="Nome"
+						width="400px" onOK="@command('aplicarFiltro')" />
+					<button label="Filtrar usuário"
+						iconSclass="fas fa-filter" onClick="@command('aplicarFiltro')" />
+				</hlayout>
+				<grid model="@load(vm.usuarios)" mold="paging"
+					pageSize="10" emptyMessage="Nenhum usuário encontrado.">
+					<columns>
+						<column label="Matrícula" align="center" width="150px" />
+						<column label="Nome" align="center" />
+						<column label="Setor" align="center"
+							width="200px" />
+						<column label="Telefone" align="center"
+							width="200px" />
+						<column label="Ações" align="center"
+							width="200px" />
+					</columns>
+					<template name="model" var="usuario">
+						<row>
+							<label value="@load(usuario.matricula)" />
+							<label value="@load(usuario.nome)" />
+							<label value="@load(usuario.setor)" />
+							<label value="@load(usuario.telefone)" />
+							<div align="center">
+								<button label="Gerenciar usuário"
+									iconSclass="fas fa-edit"
+									onClick="@command('abrirModalAtualizarOperador', visible=true, operador=operador)" />
+								<button label="Visualizar grupos"
+									iconSclass="fas fa-eye"
+									onClick="@command('abrirModalAtualizarOperador', visible=true, operador=operador)" />
+							</div>
+						</row>
+					</template>
+				</grid>
+			</vlayout>
+		</panelchildren>
+	</panel>
+</zk>

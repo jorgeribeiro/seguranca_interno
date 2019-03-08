@@ -1,0 +1,72 @@
+<?page title="Organograma - Tribunal de Contas do Estado do Maranhão" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<zk>
+	<window id="win" border="none" width="640px"
+		apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') 
+		@init('br.gov.ma.tce.seguranca.pages.ListaOrganogramaSegundaCamaraVM')" >
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Conselheiro Presidente" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Álvaro César de França Ferreira" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Conselheiros" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Raimundo Nonato de Carvalho Lago Júnior" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Edmar Serra Cutrim" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Conselheiros-Substitutos" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Melquizedeque Nava Neto" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Procuradores" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Jairo Cavalcanti Vieira" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Flávia Gonzalez Leite" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Paulo Henrique Araujo dos Reis" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Secretária" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="@bind(vm.servidor.nome)" />
+				</listitem>
+			</listbox>
+		</hbox>
+	</window>
+</zk>

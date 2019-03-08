@@ -1,0 +1,122 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.zk.ui.Sessions;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.Servidor;
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.ServidorFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+import br.gov.ma.tce.seguranca.server.beans.funcionario.Funcionario;
+import br.gov.ma.tce.seguranca.server.beans.funcionario.FuncionarioFacadeBean;
+
+public class IndexVM {
+	private Usuario usuario;
+
+	private ServidorFacadeBean servidorFacadeBean;
+	private FuncionarioFacadeBean funcionarioFacadeBean;
+
+	public IndexVM() {
+		try {
+			InitialContext ctx = new InitialContext();
+			servidorFacadeBean = (ServidorFacadeBean) ctx.lookup(ServidorFacadeBean.URI);
+			funcionarioFacadeBean = (FuncionarioFacadeBean) ctx.lookup(FuncionarioFacadeBean.JNDI_SEGURANCA);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Init
+	public void init() {
+		usuario = (Usuario) Sessions.getCurrent().getAttribute("usuario");
+		// verificarNovosUsuarios();
+		// TODO corrigir sequence seq_servidor
+	}
+
+	@Command
+	public void verificarNovosUsuarios() {
+		try {
+			Integer maxIdServidor = servidorFacadeBean.findMaxId();
+			Integer maxIdFuncionario = funcionarioFacadeBean.findMaxId();
+			
+			// Se for diferente, quer dizer que existem funcionários novos
+			if (maxIdServidor != maxIdFuncionario) {
+				// Percorre cada um dos novos IDs e instancia um novo servidor
+				// TODO instanciar também novo usuário que corresponde ao servidor
+				for (int i = maxIdServidor; i <= maxIdFuncionario; i++) {
+					Funcionario f = funcionarioFacadeBean.findById(i);
+					if (f != null) {
+						Servidor s = copiaFuncionario(f);
+						servidorFacadeBean.insert(s);
+					}					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Servidor copiaFuncionario(Funcionario funcionario) {
+		// TODO possível já setar servidorId?
+		Servidor servidor = new Servidor();
+		if (funcionario.getCodigo() != null) {
+			servidor.setServidorId(funcionario.getCodigo());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getLotacaoContracheque() != null) {
+			servidor.setLotacaoContracheque(
+					funcionario.getFuncionarioFuncional().getLotacaoContracheque().getDescricao());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getLotacaoOrigem() != null) {
+			servidor.setLotacaoOrigem(funcionario.getFuncionarioFuncional().getLotacaoOrigem().getDescricao());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getLotacaoExercicio() != null) {
+			servidor.setLotacaoExercicio(funcionario.getFuncionarioFuncional().getLotacaoExercicio().getDescricao());
+			servidor.setSetorSigla(funcionario.getFuncionarioFuncional().getLotacaoExercicio().getSigla());
+			servidor.setLotacaoExercicioId(funcionario.getFuncionarioFuncional().getLotacaoExercicio().getId());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getCargoFuncao() != null) {
+			servidor.setCargoFuncao(funcionario.getFuncionarioFuncional().getCargoFuncao().getDescricao());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getCargoEfetivo() != null) {
+			servidor.setCargoEfetivo(funcionario.getFuncionarioFuncional().getCargoEfetivo().getDescricao());
+		}
+
+		if (funcionario.getMatricula() != null) {
+			servidor.setMatricula(funcionario.getMatricula());
+		}
+
+		if (funcionario.getNome() != null) {
+			servidor.setNome(funcionario.getNomeFuncionario());
+		}
+
+		if (funcionario.getPessoa() != null) {
+			servidor.setCpf(funcionario.getPessoa().getCpf());
+			servidor.setDataNascimento(funcionario.getPessoa().getDataNascimento());
+			servidor.setTipoSanguineo(funcionario.getPessoa().getTipoSanguineoFormatado());
+			servidor.setDoador(funcionario.getPessoa().getDoadorFormatado());
+			servidor.setEmail(funcionario.getPessoa().getEmail());
+			servidor.setDataAdmissao(funcionario.getPessoa().getDataAdmissao());
+			servidor.setSexo(funcionario.getPessoa().getSexoFormatado());
+			servidor.setTelefone(funcionario.getPessoa().getTelefone());
+		}
+
+		return servidor;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+}

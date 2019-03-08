@@ -1,0 +1,65 @@
+<?page title="Organograma - Tribunal de Contas do Estado do Maranhão" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+
+<zk>
+	<include src="/layout/header.zul" />
+	<window border="none" width="640px">
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Tenente Coronel" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Luis Epitácio Borges Pinheiro" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="1º Tenente" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Hamilton de Jesus França dos Santos" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="630px">
+				<listhead>
+					<listheader label="2º Sargento" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Manoel Bernardino Cantanhede Neto" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="3º Sargento" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Samuel Silva Santos" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Cabos PM" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Daniel Lima da Silva" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Maria Cristina Santos Pereira" />
+				</listitem>
+			</listbox>
+		</hbox>
+	</window>
+</zk>

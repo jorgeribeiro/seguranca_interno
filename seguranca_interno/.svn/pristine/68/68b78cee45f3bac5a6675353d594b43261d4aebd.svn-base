@@ -1,0 +1,346 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Window;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.grupousuario.GrupoUsuario;
+import br.gov.ma.tce.seguranca.interno.server.beans.grupousuario.GrupoUsuarioFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.sistema.Sistema;
+import br.gov.ma.tce.seguranca.interno.server.beans.sistema.SistemaFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.UsuarioFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuariogrupo.UsuarioGrupo;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuariogrupo.UsuarioGrupoFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.exception.BusinessException;
+
+public class UsuarioVM {
+	private Usuario usuarioSelecionado;
+	private Sistema sistemaSelecionado;
+	private UsuarioGrupo novoUsuarioGrupo, usuarioGrupoSelecionado;
+
+	private String nome, matricula, novaSenha, repeteSenha;
+
+	private Collection<Usuario> usuarios;
+	private Collection<UsuarioGrupo> usuarioGrupos;
+	private Collection<Sistema> sistemas;
+	private Collection<GrupoUsuario> grupos;
+
+	private UsuarioFacadeBean usuarioFacade;
+	private UsuarioGrupoFacadeBean usuarioGrupoFacade;
+	private SistemaFacadeBean sistemaFacade;
+	private GrupoUsuarioFacadeBean grupoUsuarioFacade;
+
+	@Wire("#modalGerenciarUsuario")
+	private Window modalGerenciarUsuario;
+
+	@Wire("#modalVisualizarGrupos")
+	private Window modalVisualizarGrupos;
+
+	@Wire("#modalConfirmaRemoverDoGrupo")
+	private Window modalConfirmaRemoverDoGrupo;
+
+	@Wire("#modalIncluirUsuarioEmNovoGrupo")
+	private Window modalIncluirUsuarioEmNovoGrupo;
+
+	@Wire("#modalIncluirUsuarioEmNovoGrupo #comboSistemas")
+	private Combobox comboSistemas;
+
+	@Wire("#modalIncluirUsuarioEmNovoGrupo #comboGrupos")
+	private Combobox comboGrupos;
+
+	public UsuarioVM() {
+		try {
+			InitialContext ctx = new InitialContext();
+			usuarioFacade = (UsuarioFacadeBean) ctx.lookup(UsuarioFacadeBean.URI);
+			usuarioGrupoFacade = (UsuarioGrupoFacadeBean) ctx.lookup(UsuarioGrupoFacadeBean.URI);
+			sistemaFacade = (SistemaFacadeBean) ctx.lookup(SistemaFacadeBean.URI);
+			grupoUsuarioFacade = (GrupoUsuarioFacadeBean) ctx.lookup(GrupoUsuarioFacadeBean.URI);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Init
+	public void init() {
+		usuarios = new ArrayList<Usuario>();
+		try {
+			sistemas = sistemaFacade.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
+		Selectors.wireComponents(view, this, false);
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void aplicarFiltro() {
+		try {
+			if ((matricula == null || matricula.trim().isEmpty()) && (nome == null || nome.trim().isEmpty())) {
+				throw new Exception("Preencha pelo menos um dos campos de filtro.");
+			}
+
+			usuarios = usuarioFacade.findByFiltro(matricula, nome);
+			if (usuarios.isEmpty()) {
+				throw new Exception("Não foram encontrados usuários com as informações inseridas.");
+			}
+		} catch (Exception e) {
+			Clients.showNotification(e.getMessage(), Clients.NOTIFICATION_TYPE_WARNING, null, null, 3000, true);
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void abrirModalGerenciarUsuario(@BindingParam("visible") Boolean visible,
+			@BindingParam("usuario") Usuario usuario) {
+		try {
+			usuarioSelecionado = usuario;
+			modalGerenciarUsuario.setVisible(visible);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void atualizarUsuario() {
+		try {
+			if ((novaSenha == null || novaSenha.trim().isEmpty())
+					|| (repeteSenha == null || repeteSenha.trim().isEmpty())) {
+				throw new BusinessException("Preencha todos os campos de senha exibidos.");
+			} else if (!novaSenha.equals(repeteSenha)) {
+				throw new BusinessException("As senhas informadas não coincidem.");
+			}
+
+			modalGerenciarUsuario.setVisible(false);
+			usuarioSelecionado.setSenha(novaSenha);
+			usuarioFacade.update(usuarioSelecionado);
+			novaSenha = repeteSenha = null;
+			Clients.showNotification("Usuário atualizado com sucesso!", Clients.NOTIFICATION_TYPE_INFO, null, null,
+					3000, true);
+		} catch (BusinessException e) {
+			Clients.showNotification(e.getMessage(), Clients.NOTIFICATION_TYPE_WARNING, null, null, 3000, true);
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void abrirModalVisualizarGrupos(@BindingParam("visible") Boolean visible,
+			@BindingParam("usuario") Usuario usuario) {
+		try {
+			if (visible) {
+				usuarioGrupos = usuarioGrupoFacade.findGruposByUsuario(usuario);
+			}
+			usuarioSelecionado = usuario;
+			modalVisualizarGrupos.setVisible(visible);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void abrirModalConfirmaRemoverDoGrupo(@BindingParam("visible") Boolean visible,
+			@BindingParam("usuarioGrupo") UsuarioGrupo usuarioGrupo) {
+		try {
+			usuarioGrupoSelecionado = usuarioGrupo;
+			modalConfirmaRemoverDoGrupo.setVisible(visible);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void removerDoGrupo() {
+		try {
+			usuarioGrupoFacade.delete(usuarioGrupoSelecionado.getUsuarioGrupoId());
+			usuarioGrupos.remove(usuarioGrupoSelecionado);
+			modalConfirmaRemoverDoGrupo.setVisible(false);
+			Clients.showNotification("Usuário removido do grupo com sucesso!", Clients.NOTIFICATION_TYPE_INFO, null,
+					null, 3000, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void abrirModalIncluirUsuarioEmNovoGrupo(@BindingParam("visible") Boolean visible,
+			@BindingParam("usuario") Usuario usuario) {
+		try {
+			usuarioSelecionado = usuario;
+			if (visible) {
+				/**
+				 * Verifica se o usuário não possui senha. Ocorre em casos de servidores
+				 * copiados do Cache e que não possuíam usuário criado. Portanto, foram criados
+				 * com senha null
+				 */
+				if (usuario.getSenha() == null) {
+					Clients.showNotification("Para inserir este usuário em um novo grupo é preciso "
+							+ "primeiramente que ele escolha uma senha de acesso aos sistemas.", true);
+					modalGerenciarUsuario.setVisible(true);
+					return;
+				}
+				novoUsuarioGrupo = new UsuarioGrupo();
+				novoUsuarioGrupo.setUsuario(usuario);
+			} else {
+				novoUsuarioGrupo.setGrupoUsuario(null);				
+				grupos = null;
+			}
+			
+			sistemaSelecionado = null;
+			comboSistemas.setSelectedItem(null);
+			comboGrupos.setSelectedItem(null);
+			modalIncluirUsuarioEmNovoGrupo.setVisible(visible);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void carregarGruposPorSistema() {
+		try {
+			novoUsuarioGrupo.setGrupoUsuario(null);
+			comboGrupos.setSelectedItem(null);
+			grupos = grupoUsuarioFacade.findGruposBySistema(sistemaSelecionado);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void incluirUsuarioNoGrupo() {
+		try {
+			if (novoUsuarioGrupo.getGrupoUsuario() == null) {
+				throw new BusinessException("Selecione o grupo que o usuário será incluído.");
+			}
+
+			usuarioGrupoFacade.insert(novoUsuarioGrupo);
+			modalIncluirUsuarioEmNovoGrupo.setVisible(false);
+			Clients.showNotification("Usuário incluído no grupo com sucesso!", Clients.NOTIFICATION_TYPE_INFO, null,
+					null, 3000, true);
+		} catch (BusinessException e) {
+			Clients.showNotification(e.getMessage(), Clients.NOTIFICATION_TYPE_WARNING, null, null, 3000, true);
+		}
+	}
+
+	public Usuario getUsuarioSelecionado() {
+		return usuarioSelecionado;
+	}
+
+	public void setUsuarioSelecionado(Usuario usuarioSelecionado) {
+		this.usuarioSelecionado = usuarioSelecionado;
+	}
+
+	public Sistema getSistemaSelecionado() {
+		return sistemaSelecionado;
+	}
+
+	public void setSistemaSelecionado(Sistema sistemaSelecionado) {
+		this.sistemaSelecionado = sistemaSelecionado;
+	}
+
+	public UsuarioGrupo getNovoUsuarioGrupo() {
+		return novoUsuarioGrupo;
+	}
+
+	public void setNovoUsuarioGrupo(UsuarioGrupo novoUsuarioGrupo) {
+		this.novoUsuarioGrupo = novoUsuarioGrupo;
+	}
+
+	public UsuarioGrupo getUsuarioGrupoSelecionado() {
+		return usuarioGrupoSelecionado;
+	}
+
+	public void setUsuarioGrupoSelecionado(UsuarioGrupo usuarioGrupoSelecionado) {
+		this.usuarioGrupoSelecionado = usuarioGrupoSelecionado;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getMatricula() {
+		return matricula;
+	}
+
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
+	}
+
+	public String getNovaSenha() {
+		return novaSenha;
+	}
+
+	public void setNovaSenha(String novaSenha) {
+		this.novaSenha = novaSenha;
+	}
+
+	public String getRepeteSenha() {
+		return repeteSenha;
+	}
+
+	public void setRepeteSenha(String repeteSenha) {
+		this.repeteSenha = repeteSenha;
+	}
+
+	public Collection<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(Collection<Usuario> usuarios) {
+		this.usuarios = usuarios;
+	}
+
+	public Collection<UsuarioGrupo> getUsuarioGrupos() {
+		return usuarioGrupos;
+	}
+
+	public void setUsuarioGrupos(Collection<UsuarioGrupo> usuarioGrupos) {
+		this.usuarioGrupos = usuarioGrupos;
+	}
+
+	public Collection<Sistema> getSistemas() {
+		return sistemas;
+	}
+
+	public void setSistemas(Collection<Sistema> sistemas) {
+		this.sistemas = sistemas;
+	}
+
+	public Collection<GrupoUsuario> getGrupos() {
+		return grupos;
+	}
+
+	public void setGrupos(Collection<GrupoUsuario> grupos) {
+		this.grupos = grupos;
+	}
+
+}

@@ -1,0 +1,74 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.servidor;
+
+import java.util.Collection;
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+@Stateless
+public class ServidorFacadeBean {
+	public static final String URI = "java:global/seguranca_ear/seguranca_interno_server/ServidorFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.servidor.ServidorFacadeBean";
+
+	@PersistenceContext(unitName = "seguranca_interno_server")
+	private EntityManager em;
+
+	public Servidor insert(Servidor servidor) {
+
+		em.persist(servidor);
+		return servidor;
+
+	}
+
+	public Servidor update(Servidor servidor) {
+
+		return em.merge(servidor);
+
+	}
+
+	public Servidor findByPrimaryKey(int id) {
+
+		return em.find(Servidor.class, id);
+
+	}
+
+	public void delete(int id) {
+
+		Servidor servidor = findByPrimaryKey(id);
+		em.remove(servidor);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Servidor> findAll() {
+
+		Query q = em.createQuery("select s from " + Servidor.NAME + " s ");
+		return q.getResultList();
+
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Servidor findByMatricula(Integer matricula) {
+
+		Query q = em.createQuery("select s from " + Servidor.NAME + " s where s.matricula=:arg0").setParameter("arg0",
+				matricula);
+
+		List results = q.getResultList();
+
+		Servidor servidor = null;
+		if (!results.isEmpty()) {
+			servidor = (Servidor) results.get(0);
+			return servidor;
+		} else {
+			return null;
+		}
+
+	}
+
+	public Integer findMaxId() {
+		Query q = em.createQuery("select max(cast(s.servidorId as integer)) from " + Servidor.NAME + " s ");
+		return (Integer) q.getResultList().get(0);
+	}
+}

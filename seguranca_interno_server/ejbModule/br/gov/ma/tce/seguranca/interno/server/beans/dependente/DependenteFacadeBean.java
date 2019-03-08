@@ -1,0 +1,118 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.dependente;
+
+import java.util.Collection;
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.Servidor;
+
+@Stateless(name = DependenteFacadeBean.NAME)
+public class DependenteFacadeBean {
+	public static final String URI = "java:global/seguranca_interno_ear/seguranca_interno_server/seguranca_interno_DependenteFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.dependente.DependenteFacadeBean";
+
+	public static final String NAME = "seguranca_interno_DependenteFacadeBean";
+
+	@PersistenceContext(unitName = "seguranca_interno_server")
+	public EntityManager em;
+
+	public Dependente findByPrimaryKey(Integer id) {
+
+		Dependente dependente = em.find(Dependente.class, id);
+		return dependente;
+
+	}
+
+	public Dependente insert(Dependente dependente) {
+
+		em.persist(dependente);
+		return dependente;
+
+	}
+
+	public Dependente update(Dependente dependente) {
+
+		return em.merge(dependente);
+
+	}
+
+	public Dependente recuperarDependente(Integer id) {
+
+		try {
+
+			StringBuffer hql = new StringBuffer(
+					"select new br.gov.ma.tce.seguranca.server.beans.funcionario.Dependente(nome, servidor, parentesco, dataNasc, sexo)  ");
+			hql.append(" from " + Dependente.NAME + " d where d.id =:id "); // Alterar
+
+			Query q = em.createQuery(hql.toString());
+			q.setParameter("id", id);
+
+			Dependente f = (Dependente) q.getSingleResult();
+
+			return f;
+
+		} catch (EntityNotFoundException e) {
+
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Dependente> filtrar(String filtro) {
+		Query q = em.createQuery("select * from " + Dependente.NAME + " d where upper(d.nome) like '%"
+				+ filtro.toUpperCase() + "%'   order by d.nome");
+		return q.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Dependente> findByName(String nome) {
+		Query q = em.createQuery("select * from " + Dependente.NAME + " d where upper(d.nome) like '%"
+				+ nome.toUpperCase() + "%'   order by asc");
+		return q.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Dependente> findAll() {
+		Query q = em.createQuery("select d from " + Dependente.NAME + " as d");
+		return q.getResultList();
+	}
+
+	public Dependente findByNome(String nome) {
+		TypedQuery<Dependente> q = em.createQuery("select d from " + Dependente.NAME + " d where d.nome = " + nome,
+				Dependente.class);
+
+		return q.getSingleResult();
+	}
+
+	public List<Dependente> findDependenteByFuncionarioId(Integer id) {
+		TypedQuery<Dependente> q = em.createQuery("select d from " + Dependente.NAME + " d where d.servidor = " + id,
+				Dependente.class);
+
+		return q.getResultList();
+	}
+
+	public List<Dependente> findDependenteByFuncionarioMatricula(Servidor funcionario) {
+		TypedQuery<Dependente> q = em.createQuery(
+				"select d from " + Dependente.NAME + " d where d.servidor = " + funcionario.getMatricula(),
+				Dependente.class);
+
+		return q.getResultList();
+	}
+
+	public List<Dependente> findDependenteByFuncionarioMatricula(Integer matricula) {
+		TypedQuery<Dependente> q = em.createQuery(
+				"select d from " + Dependente.NAME + " d where d.servidor = " + matricula, Dependente.class);
+
+		return q.getResultList();
+	}
+
+	public Integer findMaxId() {
+		Query q = em.createQuery("select max(cast(d.dependenteId as integer)) from " + Dependente.NAME + " d ");
+		return (Integer) q.getResultList().get(0);
+	}
+}

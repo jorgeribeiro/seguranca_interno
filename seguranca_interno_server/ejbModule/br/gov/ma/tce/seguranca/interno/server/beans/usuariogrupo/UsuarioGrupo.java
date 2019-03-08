@@ -1,0 +1,109 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.usuariogrupo;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.grupousuario.GrupoUsuario;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+
+/**
+ * 
+ * @author acbras
+ * 
+ * Schema: Seguranca
+ * Tabela: USUARIO_GRUPO
+ *
+ */
+
+@SuppressWarnings("rawtypes")
+@Entity(name = UsuarioGrupo.NAME)
+@Table(name = "seguranca_interno.usuario_grupo")
+public class UsuarioGrupo implements Comparable {
+
+	public static final String NAME = "SEGURANCA_INTERNO_USUARIO_GRUPO";
+
+	@Id
+	@SequenceGenerator(name = "seguranca_interno.seq_usuario_grupo", sequenceName = "seguranca_interno.seq_usuario_grupo", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seguranca_interno.seq_usuario_grupo")
+	@Column(name = "usuario_grupo_id")
+	private Integer usuarioGrupoId;
+
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
+
+	@ManyToOne
+	@JoinColumn(name = "grupo_usuario_id")
+	private GrupoUsuario grupoUsuario;
+
+	@Transient
+	public String getNomeGrupo() {
+		try {
+			return this.grupoUsuario.getNome();
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	@Transient
+	public String getNomeSistema() {
+		try {
+			return this.grupoUsuario.getSistema().getNome();
+		} catch (Exception e) {			
+			return "-";
+		}
+	}
+	
+	@Transient
+	public String getSigla() {
+		try {
+			return this.getGrupoUsuario().getSistema().getSigla();
+		} catch (Exception e) {
+			return "-";
+		}
+	}
+
+	public int compareTo(Object o) {
+		int retorno = 0;
+		if (this.getUsuarioGrupoId() > ((UsuarioGrupo) o).getUsuarioGrupoId()) {
+			retorno = 1;
+		}
+		if (this.getUsuarioGrupoId() < ((UsuarioGrupo) o).getUsuarioGrupoId()) {
+			retorno = -1;
+		}
+		return retorno;
+	}
+	
+	public Integer getUsuarioGrupoId() {
+		return usuarioGrupoId;
+	}
+
+	public void setUsuarioGrupoId(Integer usuarioGrupoId) {
+		this.usuarioGrupoId = usuarioGrupoId;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public GrupoUsuario getGrupoUsuario() {
+		return grupoUsuario;
+	}
+
+	public void setGrupoUsuario(GrupoUsuario grupoUsuario) {
+		this.grupoUsuario = grupoUsuario;
+	}
+
+}

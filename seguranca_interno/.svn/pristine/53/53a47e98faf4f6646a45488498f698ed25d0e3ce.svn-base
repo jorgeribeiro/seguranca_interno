@@ -1,0 +1,403 @@
+package br.gov.ma.tce.seguranca.util;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.Servidor;
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.ServidorFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.UsuarioFacadeBean;
+import br.gov.ma.tce.seguranca.server.beans.dependente.Dependente;
+import br.gov.ma.tce.seguranca.server.beans.dependente.DependenteFacadeBean;
+import br.gov.ma.tce.seguranca.server.beans.dependenteparentesco.DependenteParentescoFacadeBean;
+import br.gov.ma.tce.seguranca.server.beans.funcionario.Funcionario;
+import br.gov.ma.tce.seguranca.server.beans.funcionario.FuncionarioFacadeBean;
+
+public class MigracaoVM {
+
+	// rhcadservidor+ rhcadservidorfuncional + rhcadpessoa
+
+	// interno
+	private UsuarioFacadeBean usuarioFacadeBean;
+	private ServidorFacadeBean servidorFacadeBean;
+	private br.gov.ma.tce.seguranca.interno.server.beans.dependente.DependenteFacadeBean dependenteInternoFacadeBean;
+
+	// externo
+	private FuncionarioFacadeBean funcionarioFacadeBean;
+	private DependenteFacadeBean dependenteFacadeBean;
+	private DependenteParentescoFacadeBean dependenteParentescoFacadeBean;
+
+	private List<Funcionario> funcionarios;
+	private Collection<Dependente> dependentes;
+
+	private Servidor servidor;
+
+	private Collection<Usuario> usuarios;
+	private List<Servidor> servidores;
+	private List<br.gov.ma.tce.seguranca.interno.server.beans.dependente.Dependente> dependentesInternos;
+
+	public MigracaoVM() {
+
+		try {
+
+			InitialContext ctx = new InitialContext();
+
+			usuarioFacadeBean = (UsuarioFacadeBean) ctx.lookup(
+					"java:global/seguranca_ear/seguranca_interno_server/UsuarioFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.usuario.UsuarioFacadeBean");
+			servidorFacadeBean = (ServidorFacadeBean) ctx.lookup(
+					"java:global/seguranca_ear/seguranca_interno_server/ServidorFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.servidor.ServidorFacadeBean");
+			dependenteInternoFacadeBean = (br.gov.ma.tce.seguranca.interno.server.beans.dependente.DependenteFacadeBean) ctx
+					.lookup("java:global/seguranca_ear/seguranca_interno_server/seguranca_interno_DependenteFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.dependente.DependenteFacadeBean");
+			funcionarioFacadeBean = (FuncionarioFacadeBean) ctx.lookup(
+					"java:global/seguranca_ear/seguranca_cache_server/SegCache_FuncionarioFacadeBean!br.gov.ma.tce.seguranca.server.beans.funcionario.FuncionarioFacadeBean");
+			dependenteFacadeBean = (DependenteFacadeBean) ctx.lookup(
+					"java:global/seguranca_ear/seguranca_cache_server/SegCache_DependenteFacadeBean!br.gov.ma.tce.seguranca.server.beans.dependente.DependenteFacadeBean");
+			dependenteParentescoFacadeBean = (DependenteParentescoFacadeBean) ctx.lookup(
+					"java:global/seguranca_ear/seguranca_cache_server/SegCache_DependenteParentescoFacadeBean!br.gov.ma.tce.seguranca.server.beans.dependenteparentesco.DependenteParentescoFacadeBean");
+		} catch (NamingException e) {
+
+			e.printStackTrace();
+
+		}
+
+	}
+
+	@Init
+	public void init() throws ParseException {
+
+		servidores = new ArrayList<>();
+		dependentesInternos = new ArrayList<>();
+
+	}
+
+	@Command
+	public void updateUsuarios() {
+		
+		usuarios = usuarioFacadeBean.findAll();
+		
+		for (Usuario u : usuarios) {
+			
+			Servidor s = servidorFacadeBean.findByMatricula(u.getMatricula());
+			
+			if (s == null) {
+				
+			}
+
+			if (s != null) {
+				
+				if (s.getServidorId() != null) {
+					
+					try {
+						if (u.getServidor() == null) {
+							
+							System.out.println(u.getMatricula());
+							usuarioFacadeBean.atualizaUsuario(s.getServidorId(), u.getUsuarioId());
+						}						
+					} catch (NamingException e) {
+						e.printStackTrace();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("ID: " + u.getUsuarioId());
+				System.out.println("MAT: " + u.getMatricula());
+			}
+		}
+	}
+
+	@Command
+	public void migracao() throws ParseException {
+
+		funcionarios = funcionarioFacadeBean.findAll();
+
+		Date dateNascimento;
+		Integer codigo;
+		String lotacaoContra;
+		String lotacaoOrigem;
+		Integer lotacaoExercicioId;
+		String lotacaoExercicio;
+		String cargoFuncao;
+		Integer matricula;
+		String nome;
+		String cpf;
+		String tipoSanguineo;
+		String doador;
+		String email;
+		String dataAdmissao;
+		String sexo;
+		String telefone;
+
+		for (Funcionario funcionario : funcionarios) {
+
+			if (funcionario.getPessoa().getDataNascimento() != null) {
+
+				dateNascimento = funcionario.getPessoa().getDataNascimento();
+
+			} else {
+
+				dateNascimento = null;
+
+			}
+
+			if (funcionario.getCodigo() != null) {
+
+				codigo = funcionario.getCodigo();
+
+			} else {
+
+				codigo = null;
+
+			}
+
+			if (funcionario.getFuncionarioFuncional().getLotacaoContracheque() != null) {
+
+				lotacaoContra = funcionario.getFuncionarioFuncional().getLotacaoContracheque().getDescricao();
+
+			} else {
+
+				lotacaoContra = null;
+
+			}
+
+			if (funcionario.getFuncionarioFuncional().getLotacaoOrigem() != null) {
+
+				lotacaoOrigem = funcionario.getFuncionarioFuncional().getLotacaoOrigem().getDescricao();
+
+			} else {
+
+				lotacaoOrigem = null;
+			}
+
+			if (funcionario.getFuncionarioFuncional().getLotacaoExercicio() != null) {
+
+				lotacaoExercicioId = funcionario.getFuncionarioFuncional().getLotacaoExercicio().getId();
+
+			} else {
+
+				lotacaoExercicioId = null;
+			}
+
+			if (funcionario.getFuncionarioFuncional().getLotacaoExercicio() != null) {
+
+				lotacaoExercicio = funcionario.getFuncionarioFuncional().getLotacaoExercicio().getDescricao();
+
+			} else {
+
+				lotacaoExercicio = null;
+			}
+
+			if (funcionario.getFuncionarioFuncional().getCargoFuncao() != null) {
+
+				cargoFuncao = funcionario.getFuncionarioFuncional().getCargoFuncao().getDescricao();
+
+			} else {
+
+				cargoFuncao = null;
+			}
+
+			if (funcionario.getMatricula() != null) {
+
+				matricula = funcionario.getMatricula();
+
+			} else {
+
+				matricula = null;
+
+			}
+
+			if (funcionario.getNomeFuncionario() != null) {
+
+				nome = funcionario.getNomeFuncionario();
+
+			} else {
+
+				nome = null;
+
+			}
+
+			if (funcionario.getPessoa().getCpf() != null) {
+
+				cpf = funcionario.getPessoa().getCpf();
+
+			} else {
+
+				cpf = null;
+			}
+
+			if (funcionario.getPessoa().getTipoSanguineoFormatado() != null) {
+
+				tipoSanguineo = funcionario.getPessoa().getTipoSanguineoFormatado();
+
+			} else {
+
+				tipoSanguineo = null;
+			}
+
+			if (funcionario.getPessoa().getDoadorFormatado() != null) {
+
+				doador = funcionario.getPessoa().getDoadorFormatado();
+
+			} else {
+
+				doador = null;
+			}
+
+			if (funcionario.getPessoa().getEmail() != null) {
+
+				email = funcionario.getPessoa().getEmail();
+
+			} else {
+
+				email = null;
+			}
+
+			if (funcionario.getPessoa().getDataAdmissao() != null) {
+
+				dataAdmissao = funcionario.getPessoa().getDataAdmissao();
+
+			} else {
+
+				dataAdmissao = null;
+			}
+
+			if (funcionario.getPessoa().getSexoFormatado() != null) {
+
+				sexo = funcionario.getPessoa().getSexoFormatado();
+
+			} else {
+
+				sexo = null;
+			}
+
+			if (funcionario.getPessoa().getTelefone() != null) {
+
+				telefone = funcionario.getPessoa().getTelefone();
+
+			} else {
+
+				telefone = null;
+			}
+
+			servidor = new Servidor(codigo, lotacaoContra, lotacaoOrigem, lotacaoExercicioId, lotacaoExercicio,
+					cargoFuncao, matricula, nome, cpf, dateNascimento, tipoSanguineo, doador, email, dataAdmissao, sexo,
+					telefone);
+
+			servidores.add(servidor);
+
+		}
+
+		for (Servidor servidor : servidores) {
+
+			System.out.println("ID " + servidor.getServidorId());
+			System.out.println("NOME " + servidor.getLotacaoContracheque());
+			System.out.println("3 " + servidor.getLotacaoOrigem());
+			System.out.println("4 " + servidor.getLotacaoExercicio());
+
+			System.out.println("5 " + servidor.getCargoFuncao());
+			System.out.println("6 " + servidor.getMatricula());
+			System.out.println("7 " + servidor.getNome());
+			System.out.println("8 " + servidor.getCpf());
+			System.out.println("9 " + servidor.getDataNascimento());
+			System.out.println("10 " + servidor.getTipoSanguineo());
+			System.out.println("11 " + servidor.getDoador());
+
+			System.out.println("12 " + servidor.getEmail());
+			System.out.println("13 " + servidor.getDataAdmissao());
+			System.out.println("14 " + servidor.getSexo());
+			System.out.println("15 " + servidor.getTelefone());
+
+			if (servidor.getServidorId() != 354) {
+				servidorFacadeBean.insert(servidor);
+			}
+
+		}
+	}
+
+	@Command
+	public void migracao2() throws ParseException {
+
+		dependentes = dependenteFacadeBean.findAll();
+
+		Integer dependenteId;
+		Servidor servidor;
+		String nome;
+		Date dataNascimento;
+		String sexo;
+		String parentesco;
+		String tipoSanguineo;
+		String telefone;
+
+		for (Dependente dependente : dependentes) {
+
+			if (dependente.getId() != null) {
+				dependenteId = dependente.getId();
+			} else {
+				dependenteId = null;
+			}
+
+			if (dependente.getServidor() != null) {
+				servidor = servidorFacadeBean.findByPrimaryKey(dependente.getServidor());
+			} else {
+				servidor = null;
+			}
+
+			if (dependente.getNome() != null) {
+				nome = dependente.getNomeDependente();
+			} else {
+				nome = null;
+			}
+
+			if (dependente.getDataNasc() != null) {
+				dataNascimento = dependente.getDataNasc();
+			} else {
+				dataNascimento = null;
+			}
+
+			if (dependente.getSexoFormatado() != null) {
+				sexo = dependente.getSexoFormatado();
+			} else {
+				sexo = null;
+			}
+
+			if (dependente.getParentesco() != null) {
+				parentesco = dependenteParentescoFacadeBean.findByPrimaryKey(dependente.getParentesco()).getDescricao();
+			} else {
+				parentesco = null;
+			}
+
+			if (dependente.getTipoSangue() != null) {
+				tipoSanguineo = dependente.getTipoSangue();
+			} else {
+				tipoSanguineo = null;
+			}
+
+			if (dependente.getTelefone() != null) {
+				telefone = dependente.getTelefone();
+			} else {
+				telefone = null;
+			}
+
+			br.gov.ma.tce.seguranca.interno.server.beans.dependente.Dependente d = new br.gov.ma.tce.seguranca.interno.server.beans.dependente.Dependente(
+					dependenteId, servidor, nome, dataNascimento, sexo, parentesco, tipoSanguineo, telefone);
+
+			dependentesInternos.add(d);
+		}
+
+		for (br.gov.ma.tce.seguranca.interno.server.beans.dependente.Dependente dependente2 : dependentesInternos) {
+			System.out.println("ID " + dependente2.getDependenteId());
+			System.out.println("Nome " + dependente2.getNomeDependente());
+			dependenteInternoFacadeBean.insert(dependente2);
+		}
+	}
+}

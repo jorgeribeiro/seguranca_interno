@@ -1,0 +1,15 @@
+<zk>
+	<menubar
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.MenubarVM')">
+		<menuitem label="SEGURANÇA"
+			onClick='Executions.sendRedirect("/index.zul")' />
+		<menuitem label="Usuário"
+			onClick='Executions.sendRedirect("/pages/usuario.zul")' />
+		<menuitem label="Sistema"
+			onClick='Executions.sendRedirect("/pages/sistema.zul")' />
+		<menuitem label="Grupo Usuário"
+			onClick='Executions.sendRedirect("/pages/grupousuario.zul")' />
+		<menuitem label="Sair" sclass="right-menu"
+			onClick="@command('sair')" />
+	</menubar>
+</zk>

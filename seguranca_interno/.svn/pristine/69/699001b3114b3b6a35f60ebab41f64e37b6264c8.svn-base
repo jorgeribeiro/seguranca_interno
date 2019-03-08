@@ -1,0 +1,33 @@
+<?page title="Organograma - Tribunal de Contas do Estado do Maranhão" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="win" border="none" width="640px"
+		apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') 
+		@init('br.gov.ma.tce.seguranca.pages.ListaOrganogramaVM')">
+
+		<hbox>
+			<listbox id="boxFuncionario" width="630px" selectedItem="@bind(vm.funcionario)"
+				model="@bind(vm.funcionarios)">
+				<listhead>
+					<listheader label="Nome" />
+					<listheader label="Cargo" />
+					<listheader label="Lotação" width="110px" />
+					<listheader label="Telefone" width="110px" />
+				</listhead>
+				<template name="model" var="funcionario" >
+					<listitem height="30px">
+						<listcell label="@load(funcionario.nome)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+						<listcell label="@load(funcionario.funcionarioFuncional.cargoFuncao.descricao)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+<!-- 						<listcell style="font-size:10px;" label="@load(funcionario.funcionarioFuncional.lotacaoOrigem.sigla)" /> -->
+<!-- 						<listcell style="font-size:10px;" label="@load(funcionario.funcionarioFuncional.lotacaoOrigem.telefonePrincipal)" /> -->
+						<listcell label="@load(funcionario.funcionarioFuncional.lotacaoExercicio.sigla)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+						<listcell label="@load(funcionario.funcionarioFuncional.lotacaoExercicio.telefonePrincipal)" 
+							style="line-height:110%;font-size:9pt;word-wrap:normal"/>
+					</listitem>
+				</template>
+			</listbox>
+		</hbox>
+	</window>
+</zk>

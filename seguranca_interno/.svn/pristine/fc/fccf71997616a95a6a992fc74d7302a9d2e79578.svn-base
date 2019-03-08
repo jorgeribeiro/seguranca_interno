@@ -1,0 +1,28 @@
+1 usuário
+	grid:
+	mat nome setor telefone
+	
+	novo usuário se tornar gerenciar usuário:
+	buscar no cache (eliminar esta etapa, inserir novos usuários do cache automaticamente)
+	adicionar grupos
+	eliminar zerar senha (apenas alterar senha)
+
+2 sistema
+	grid:
+	nome sigla
+	
+	novo sistema
+	nome
+	sigla
+	
+	listar usuários do sistema (com opções)
+
+3 grupo usuário
+	grid:
+	grupo sistema
+	
+	novo grupo usuário
+	grupo usuário
+	sistema (tabela sistema)
+	
+	listar de usuários do grupo (com opções)

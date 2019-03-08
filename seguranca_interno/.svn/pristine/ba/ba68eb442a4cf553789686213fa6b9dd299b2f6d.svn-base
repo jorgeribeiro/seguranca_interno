@@ -1,0 +1,151 @@
+<?page title="Segurança - TCE/MA - Sistema"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.SistemaVM')"
+		title="Sistema" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<button label="Novo sistema"
+					iconSclass="fas fa-plus-circle"
+					onClick="@command('abrirModalNovoSistema', visible=true)" />
+				<grid model="@load(vm.sistemas)" mold="paging"
+					pageSize="10">
+					<columns>
+						<column label="Nome" align="center" />
+						<column label="Sigla" align="center"
+							width="400px" />
+						<column label="Ações" align="center"
+							width="200px" />
+					</columns>
+					<template name="model" var="sistema">
+						<row>
+							<label value="@load(sistema.nome)" />
+							<label value="@load(sistema.sigla)" />
+							<div align="center">
+								<button label="Visualizar usuários"
+									iconSclass="fas fa-eye"
+									onClick="@command('abrirModalVisualizarUsuarios', visible=true, sistema=sistema)" />
+							</div>
+						</row>
+					</template>
+				</grid>
+			</vlayout>
+
+			<window id="modalNovoSistema" mode="modal" visible="false"
+				sclass="custom-window">
+				<vbox align="left">
+					<label value="Novo sistema" sclass="custom-title" />
+					<vlayout spacing="1px">
+						<label value="Nome:" style="font-weight:bold" />
+						<textbox value="@bind(vm.novoSistema.nome)" />
+					</vlayout>
+					<vlayout spacing="1px">
+						<label value="Sigla:" style="font-weight:bold" />
+						<textbox value="@bind(vm.novoSistema.sigla)" />
+					</vlayout>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalNovoSistema', visible=false)" />
+						<button tooltiptext="Incluir sistema"
+							style="font-weight:bold" label="INCLUIR SISTEMA"
+							iconSclass="fas fa-plus-circle"
+							onClick="@command('incluirSistema')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalVisualizarUsuarios" mode="modal"
+				width="600px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Visualizar usuários por sistema"
+						sclass="custom-title" />
+					<hbox align="center">
+						<vlayout spacing="1px"
+							style="line-height:0px">
+							<label value="Sistema:"
+								style="font-weight:bold" />
+							<label
+								value="@load(vm.sistemaSelecionado.nome)" />
+						</vlayout>
+
+						<div align="right">
+							<button width="120px" height="30px"
+								style="font-size:12px;font-weight:bold;" visible="true"
+								label="Gerar Relatório"
+								onClick="@command('modalRelatorioUsuariosPorSistema', visible=true)" />
+
+						</div>
+					</hbox>
+					<grid model="@load(vm.usuariosSistema)"
+						mold="paging" pageSize="5"
+						emptyMessage="Nenhum usuário encontrado.">
+						<columns>
+							<column label="Nome" align="center" />
+							<column label="Grupo" align="center" />
+							<column label="Remover do grupo"
+								align="center" width="150px" />
+						</columns>
+						<template name="model" var="usuarioGrupo">
+							<row>
+								<label
+									value="@load(usuarioGrupo.usuario.nome)" />
+								<label value="@load(usuarioGrupo.nomeGrupo)" />
+								<button
+									onClick="@command('abrirModalConfirmaRemoverDoGrupo', visible=true, usuarioGrupo=usuarioGrupo)"
+									iconSclass="fas fa-minus-circle" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVisualizarUsuarios', visible=false, sistema=null)" />
+					</div>
+				</vbox>
+			</window>
+			
+			<window id="modalConfirmaRemoverDoGrupo" mode="modal"
+				visible="false" sclass="custom-window">
+				<vbox align="center">
+					<label value="Remover este usuário do grupo?" />
+					<label style="font-weight:bold"
+						value="@load(vm.usuarioGrupoSelecionado.grupoUsuario.nomeGrupoSistema)" />
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalConfirmaRemoverDoGrupo', visible=false, usuarioGrupo=null)" />
+						<button tooltiptext="Remover do grupo"
+							style="font-weight:bold" label="REMOVER DO GRUPO"
+							iconSclass="fas fa-minus-circle"
+							onClick="@command('removerDoGrupo')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalVisualizaRelatorioUsuarios" mode="modal"
+				visible="false">
+				<vbox align="center" style="padding:15px">
+					<iframe id="iframeRelatorio" width="1000px"
+						height="500px" />
+					<button tooltiptext="Fechar"
+						style="font-weight:bold" label="FECHAR"
+						onClick="@command('modalRelatorioUsuariosPorSistema', visible=false)" />
+				</vbox>
+			</window>
+
+		</panelchildren>
+	</panel>
+</zk>

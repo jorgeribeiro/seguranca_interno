@@ -1,0 +1,229 @@
+@charset "UTF-8";
+
+/* Estilos da nova interface */
+/* Estilos ZK */
+body {
+	padding: 0px;
+	height: 100%;
+	min-height: 100%;
+}
+
+.z-toolbarbutton-content {
+	color: #242C6D;
+	font-weight: bold;
+}
+
+.z-window {
+	padding: 0px;
+}
+
+.z-window-content {
+	padding: 0px;
+}
+
+.z-menubar {
+	background: #EDEDED;
+	border-top: 1px solid #D1D1D1;
+	border-bottom: 1px solid #D1D1D1;
+	padding: 4px;
+}
+
+.z-menubar-horizontal li {
+	margin: 4px;
+}
+
+.z-menu-text, .z-menuitem-text {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.z-menu-content, .z-menuitem-content {
+	background: none;
+}
+
+.z-menu-selected>.z-menu-content, .z-menu-content:hover,
+	.z-menuitem-content:hover, .z-menu-content:focus, .z-menuitem-content:focus,
+	.z-menu-hover>.z-menu-content, .z-menuitem-hover>.z-menuitem-content {
+	color: #fff !important;
+	background-color: #0093F9 !important;
+}
+
+.z-panel {
+	margin: 15px;
+	background: #EDEDED;
+	border: 1px solid #D1D1D1;
+}
+
+.z-panel-header {
+	font-size: 20px;
+	font-weight: bold;
+	padding: 10px;
+}
+
+.z-panel-icon {
+	padding: 0px;
+}
+
+.z-panelchildren {
+	padding: 15px;
+}
+
+.z-grid-header, .z-grid-body, .z-grid-footer, .z-grid-header table,
+	.z-grid-body table {
+	width: 100% !important;
+}
+
+.z-north, .z-south, .z-west, .z-center, .z-east {
+	width: 100% !important;
+	border: none;
+	background: transparent;
+}
+
+.z-notification-content {
+	min-height: 0;
+	vertical-align: middle;
+}
+
+.z-tab-text {
+	font-weight: bold;
+}
+
+.z-tab-selected {
+	border-bottom: 2px solid #204a87;
+}
+
+.z-tab-selected .z-tab-text {
+	color: #204a87;
+}
+
+.z-tab-selected .z-tab-text:hover {
+	color: #295fae;
+}
+
+.z-tab-image {
+	vertical-align: middle;
+	margin-right: 4px;
+	width: auto;
+	height: auto;
+}
+
+.z-column {
+	background: #204a87;
+	border-left: 1px solid #183a6c;
+	border-bottom: 1px solid #183a6c;
+}
+
+.z-button {
+	background-color: #204a87;
+}
+
+.z-button:hover {
+	background-color: #295fae;
+}
+
+.z-button:active {
+	background-color: #2c67bd;
+}
+
+.z-button:focus {
+	background-color: #2e6ecc;
+}
+
+.z-row:hover > .z-row-inner, .z-row:hover > .z-cell {
+	background: #f3f3f3;
+}
+
+.z-tabpanel {
+	padding: 10px;
+}
+
+/* Estilos criados */
+.custom-window {
+	padding: 15px;
+}
+
+.custom-title {
+	font-size: 20px;
+	font-weight: bold;
+	color: #204a87;
+}
+
+.custom-label-login-1 {
+	font-size: 60px;
+	font-weight: bold;
+	color: #204a87;
+}
+
+.custom-label-login-2 {
+	font-size: 20px;
+	font-weight: bold;
+	color: #3465a4;
+}
+
+.custom-label-1 {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.custom-panel {
+	margin-top: 2%;
+	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.custom-footer {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 10px;
+	background-color: #EDEDED;
+	text-align: center;
+}
+
+.right-menu {
+	position: absolute !important;
+	right: 0;
+}
+
+.button-basic {
+	color: #000000;
+	background-color: #F0F0F0;
+}
+
+.button-basic:hover, .button-basic:focus, .button-basic:active {
+	color: #333;
+	text-decoration: none;
+	background-color: transparent;
+	border-color: transparent;
+}
+
+.button-default {
+	background-color: #FFFFFF;
+}
+
+.button-primary {
+	color: #fff;
+	background-color: #337AB7;
+	border-color: #2E6DA4;
+}
+
+.button-primary:hover, .button-primary:focus, .button-primary:active {
+	color: #fff;
+	text-decoration: none;
+	background-color: #286090;
+	border-color: #204D74;
+}
+
+.button-success {
+	background-color: #5CB85C;
+}
+
+.button-warning {
+	background-color: #F0AD4E;
+}
+
+.button-danger {
+	background-color: #D9534F;
+}

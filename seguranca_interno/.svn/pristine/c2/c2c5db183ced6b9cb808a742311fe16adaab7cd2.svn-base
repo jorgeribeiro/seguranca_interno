@@ -1,0 +1,73 @@
+<?page title="Segurança - TCE/MA"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.IndexVM')"
+		title="Início" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<panel>
+					<panelchildren>
+						<vlayout spacing="1px">
+							<label
+								value="Segurança - Acessos e Permissões"
+								sclass="custom-label-1" />
+							<hlayout>
+								<label value="Usuário: " />
+								<label
+									value="@load(vm.usuario.nomeMatricula)" />
+							</hlayout>
+							<label
+								value="Utilize o sistema pelas opções do menu superior." />
+
+							<separator />
+							<button label="Verificar novos usuários"
+								iconSclass="fas fa-sync-alt"
+								onClick="@command('abrirModalVerificaNovosUsuarios', visible=true)" />
+						</vlayout>
+					</panelchildren>
+				</panel>
+			</vlayout>
+
+			<window id="modalVerificaNovosUsuarios" mode="modal"
+				width="500px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Verificação de novos usuários"
+						sclass="custom-title" />
+					<label value="Novos usuários encontrados:" />
+					<grid model="@load(vm.funcionarios)" mold="paging"
+						pageSize="5" emptyMessage="Nenhum novo usuário encontrado.">
+						<columns>
+							<column label="Nome" align="center" />
+							<column label="Matrícula" align="center"
+								width="150px" />
+						</columns>
+						<template name="model" var="funcionario">
+							<row>
+								<label value="@load(funcionario.nome)" />
+								<label
+									value="@load(funcionario.matricula)" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button id="btnFechar" tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVerificaNovosUsuarios', visible=false)" />
+						<button id="btnCopiarUsuarios"
+							tooltiptext="Copiar usuários"
+							autodisable="btnFechar, btnCopiarUsuarios"
+							disabled="@load(empty vm.funcionarios)" style="font-weight:bold"
+							label="COPIAR USUÁRIOS" iconSclass="fas fa-sync-alt"
+							onClick="@command('criarNovosUsuarios')" />
+					</div>
+				</vbox>
+			</window>
+		</panelchildren>
+	</panel>
+</zk>

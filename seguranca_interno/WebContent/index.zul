@@ -1,0 +1,204 @@
+<?page title="Segurança - TCE/MA"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.IndexVM')"
+		title="Início" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<panel>
+					<panelchildren>
+						<vlayout spacing="1px">
+							<label
+								value="Segurança - Acessos e Permissões"
+								sclass="custom-label-1" />
+							<hlayout>
+								<label value="Usuário: " />
+								<label
+									value="@load(vm.usuario.nomeMatricula)" />
+							</hlayout>
+							<label
+								value="Utilize o sistema pelas opções do menu superior." />
+
+							<separator />
+							<button label="Verificar novos usuários"
+								iconSclass="fas fa-plus-circle" width="200px"
+								onClick="@command('abrirModalVerificaNovosUsuarios', visible=true)" />
+							<button label="Verificar novos dependentes"
+								visible="@load(vm.usuarioGrupo.nomeGrupo eq 'Migração')"
+								iconSclass="fas fa-plus-circle" width="200px"
+								onClick="@command('abrirModalVerificarNovosDependentes', visible=true)" />
+							<button label="Atualizar usuários"
+								visible="@load(vm.usuarioGrupo.nomeGrupo eq 'Migração')"
+								iconSclass="fas fa-sync-alt" width="200px"
+								onClick="@command('abrirModalAtualizarUsuarios', visible=true)" />
+							<button label="Atualizar dependentes"
+								visible="@load(vm.usuarioGrupo.nomeGrupo eq 'Migração')"
+								iconSclass="fas fa-sync-alt" width="200px"
+								onClick="@command('abrirModalAtualizarDependentes', visible=true)" />
+						</vlayout>
+					</panelchildren>
+				</panel>
+			</vlayout>
+
+			<window id="modalVerificarNovosUsuarios" mode="modal"
+				width="500px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Verificação de novos usuários"
+						sclass="custom-title" />
+					<label value="Novos usuários encontrados:" />
+					<grid model="@load(vm.servidores)" mold="paging"
+						pageSize="5" emptyMessage="Nenhum novo usuário encontrado.">
+						<columns>
+							<column label="Nome" align="center" />
+							<column label="Matrícula" align="center"
+								width="150px" />
+						</columns>
+						<template name="model" var="servidor">
+							<row>
+								<label value="@load(servidor.nome)" />
+								<label
+									value="@load(servidor.matricula)" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button id="btnFechar" tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVerificaNovosUsuarios', visible=false)" />
+						<button id="btnCopiarUsuarios"
+							tooltiptext="Copiar usuários"
+							autodisable="btnFechar, btnCopiarUsuarios"
+							disabled="@load(empty vm.servidores)" style="font-weight:bold"
+							label="COPIAR USUÁRIOS" iconSclass="fas fa-plus-circle"
+							onClick="@command('criarNovosUsuarios')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalVerificarNovosDependentes" mode="modal"
+				width="600px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Verificação de novos dependentes:"
+						sclass="custom-title" />
+					<label value="Novos dependentes encontrados:" />
+					<grid model="@load(vm.dependentes)" mold="paging"
+						pageSize="5" emptyMessage="Nenhum novo dependente encontrado.">
+						<columns>
+							<column label="Nome do dependente"
+								align="center" />
+							<column label="Servidor" align="center" />
+						</columns>
+						<template name="model" var="dependente">
+							<row>
+								<label value="@load(dependente.nome)" />
+								<label
+									value="@load(dependente.servidor.nome)" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button id="btnFechar" tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVerificarNovosDependentes', visible=false)" />
+						<button id="btnCopiarDependentes"
+							tooltiptext="Copiar dependentes"
+							autodisable="btnFechar, btnCopiarDependentes"
+							disabled="@load(empty vm.dependentes)" style="font-weight:bold"
+							label="COPIAR DEPENDENTES" iconSclass="fas fa-plus-circle"
+							onClick="@command('criarNovosDependentes')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalAtualizarUsuarios" mode="modal"
+				width="500px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Atualizar usuários"
+						sclass="custom-title" />
+					<label value="Usuários com alteração encontrados:" />
+					<grid model="@load(vm.servidoresComAlteracao)"
+						mold="paging" pageSize="5"
+						emptyMessage="Nenhum usuário com alteração encontrado.">
+						<columns>
+							<column label="Nome" align="center" />
+							<column label="Matrícula" align="center"
+								width="150px" />
+						</columns>
+						<template name="model" var="servidor">
+							<row>
+								<label value="@load(servidor.nome)" />
+								<label
+									value="@load(servidor.matricula)" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button id="btnFechar" tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalAtualizarUsuarios', visible=false)" />
+						<button id="btnAtualizarUsuarios"
+							tooltiptext="Atualizar usuários"
+							autodisable="btnFechar, btnAtualizarUsuarios"
+							disabled="@load(empty vm.servidoresComAlteracao)"
+							style="font-weight:bold" label="ATUALIZAR USUÁRIOS"
+							iconSclass="fas fa-sync-alt"
+							onClick="@command('atualizarUsuarios')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalAtualizarDependentes" mode="modal"
+				width="500px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Atualizar dependentes"
+						sclass="custom-title" />
+					<label
+						value="Dependentes com alteração encontrados:" />
+					<grid model="@load(vm.dependentesComAlteracao)"
+						mold="paging" pageSize="5"
+						emptyMessage="Nenhum dependente com alteração encontrado.">
+						<columns>
+							<column label="Nome do dependente"
+								align="center" />
+							<column label="Servidor" align="center" />
+						</columns>
+						<template name="model" var="dependente">
+							<row>
+								<label value="@load(dependente.nome)" />
+								<label
+									value="@load(dependente.servidor.nome)" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button id="btnFechar" tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalAtualizarDependentes', visible=false)" />
+						<button id="btnAtualizarDependentes"
+							tooltiptext="Atualizar dependentes"
+							autodisable="btnFechar, btnAtualizarDependentes"
+							disabled="@load(empty vm.dependentesComAlteracao)"
+							style="font-weight:bold" label="ATUALIZAR DEPENDENTES"
+							iconSclass="fas fa-sync-alt"
+							onClick="@command('atualizarDependentes')" />
+					</div>
+				</vbox>
+			</window>
+		</panelchildren>
+	</panel>
+</zk>

@@ -1,0 +1,120 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zhtml.Messagebox;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Sessions;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.UsuarioFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuariogrupo.UsuarioGrupo;
+
+public class LoginVM {
+
+	private Usuario usuario;
+	private UsuarioFacadeBean usuarioFacadeBean;
+
+	private String login = "";
+	private String senha = "";
+	private boolean hasErro;
+
+	public LoginVM() {
+		try {
+			InitialContext ctx = new InitialContext();
+			//TODO
+			usuarioFacadeBean = (UsuarioFacadeBean) ctx.lookup(
+					"java:global/seguranca_ear/seguranca_interno_server/UsuarioFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.usuario.UsuarioFacadeBean");
+			//ctx.close();
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Init
+	public void init() {
+
+		
+
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void login() throws InterruptedException {
+		
+		this.usuario = new Usuario();
+		hasErro = true;
+
+		try {
+			if ((login == null || login.length() == 0) && (senha == null || senha.length() == 0)) {		
+				throw new Exception("Os campos Login e Senha devem ser preenchidos!");
+			}
+			
+			usuario =  usuarioFacadeBean.findByMatricula(login);
+			
+			if (usuario == null) {
+			
+				throw new Exception("Usuário Inválido!");
+			}else 
+				if (!usuario.getSenha().equals(senha)) {
+				throw new Exception("Senha Inválida!");
+			}
+
+			else {
+				
+				//corrigir aqui
+				Usuario user = usuarioFacadeBean.findByLoginComGrupos(usuario.getMatricula());
+				
+		
+				for (Object obj : user.getUsuarioGrupos()) {
+					
+					UsuarioGrupo userGroup = (UsuarioGrupo) obj;
+					
+					if (userGroup.getGrupoUsuario().getSistema().getSigla().equals("SEG")) {
+						Sessions.getCurrent().setAttribute("usuario", usuario);
+						Sessions.getCurrent().setAttribute("usuarioGrupo", userGroup);
+						hasErro = false;
+						Executions.sendRedirect("/template.zul");
+					}
+				}
+
+				if (hasErro == true) {
+					throw new Exception("Usuário Sem Permissão!");
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			Messagebox.show(e.getLocalizedMessage(), "Segurança", Messagebox.OK, Messagebox.ERROR);	
+		}
+
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+}

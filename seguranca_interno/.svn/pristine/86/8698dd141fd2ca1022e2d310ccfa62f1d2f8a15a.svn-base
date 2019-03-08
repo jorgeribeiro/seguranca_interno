@@ -1,0 +1,16 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import org.zkoss.bind.annotation.Init;
+
+public class IndexVM {
+
+	public IndexVM() {
+
+	}
+
+	@Init
+	public void init() {
+
+	}
+
+}

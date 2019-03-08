@@ -1,0 +1,10 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="new page title" border="normal"
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.util.MigracaoVM')">
+		<!-- <button label="VAI PORRA" onClick="@command('migracao')" /> -->
+		<!-- <button label="VAI PORRA CARAI" onClick="@command('updateUsuarios')" /> -->
+		<button label="VAI CARAI" onClick="@command('migracao2')"/>
+		<!-- <button label="CONFIRMA CARAI" onClick="@command('verificaMigracao')" /> -->
+	</window>
+</zk>

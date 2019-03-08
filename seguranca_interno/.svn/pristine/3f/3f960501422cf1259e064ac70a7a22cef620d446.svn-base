@@ -1,0 +1,7 @@
+<zk>
+	<include src="/layout/header.zul" />
+	<window>
+		<include src="/layout/menubar.zul" />
+		<div self="@insert(conteudo)" />
+	</window>
+</zk>

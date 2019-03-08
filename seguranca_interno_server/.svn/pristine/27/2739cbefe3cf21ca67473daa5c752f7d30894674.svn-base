@@ -1,0 +1,143 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.util;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+
+public class Report {
+
+	public static File getReportListaPresenca(String pathRelatorios, List<?> dados, String relatorio, Map<String, Object> params) {
+		try {
+			InputStream input = new FileInputStream(pathRelatorios + "/" + relatorio);
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dados);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(input, params, dataSource);
+
+			String diretorioFinalRelatorio = System.getProperty("java.io.tmpdir");
+			File file = File.createTempFile("lista_presenca", ".pdf", new File(diretorioFinalRelatorio));
+			JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+			return file;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (JRException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+
+	public static Properties getProperties(String pathRelatorios, List<?> dados, String relatorio,
+			Map<String, Object> params) {
+
+		try {
+			InputStream input = new FileInputStream(pathRelatorios + "/" + relatorio);
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dados);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(input, params, dataSource);
+
+			String diretorioFinalRelatorio = System.getProperty("java.io.tmpdir");
+
+			Properties properties = null;
+				properties = exportarPDF(diretorioFinalRelatorio, jasperPrint);
+
+			
+
+			return properties;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+
+		} catch (JRException e) {
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static Properties getProperties(String pathRelatorios, Map<String, List<?>> dados,
+			Map<String, Object> params) {
+
+		InputStream input = null;
+		JRBeanCollectionDataSource dataSource = null;
+		JasperPrint jasperPrintPrincipal = null;
+
+		Iterator<Entry<String, List<?>>> iterator = dados.entrySet().iterator();
+
+		Map.Entry<String, List<?>> primeiroReport = iterator.next();
+
+		try {
+
+			input = new FileInputStream(pathRelatorios + "/" + primeiroReport.getKey());
+			dataSource = new JRBeanCollectionDataSource(primeiroReport.getValue());
+			jasperPrintPrincipal = JasperFillManager.fillReport(input, params, dataSource);
+
+			while (iterator.hasNext()) {
+
+				Map.Entry<String, List<?>> dado = iterator.next();
+
+				input = new FileInputStream(pathRelatorios + "/" + dado.getKey());
+				dataSource = new JRBeanCollectionDataSource(dado.getValue());
+				JasperPrint jasperPrintFilho = JasperFillManager.fillReport(input, params, dataSource);
+
+				for (JRPrintPage page : jasperPrintFilho.getPages()) {
+					jasperPrintPrincipal.addPage(page);
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+
+		try {
+
+			String diretorioFinalRelatorio = System.getProperty("java.io.tmpdir");
+
+			Properties properties = null;
+
+			
+				properties = exportarPDF(diretorioFinalRelatorio, jasperPrintPrincipal);
+
+			return properties;
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+
+
+	private static Properties exportarPDF(String path, JasperPrint jasperPrint) throws IOException, JRException {
+
+		File file = File.createTempFile(jasperPrint.getName(), ".pdf", new File(path));
+		JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath());
+
+		Properties properties = criarProperties(jasperPrint, "pdf", "application/pdf", file);
+
+		return properties;
+	}
+
+	
+	
+
+	
+}

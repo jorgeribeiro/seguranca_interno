@@ -1,0 +1,220 @@
+<?page title="Segurança - TCE/MA - Usuário"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template.zul" ?>
+
+<zk>
+	<panel
+		viewModel="@id('vm') @init('br.gov.ma.tce.seguranca.pages.UsuarioVM')"
+		title="Usuário" border="normal" self="@define(conteudo)">
+		<panelchildren>
+			<vlayout>
+				<hlayout>
+					<intbox value="@bind(vm.matricula)" focus="true"
+						placeholder="Matrícula" onOK="@command('aplicarFiltro')" />
+					<textbox value="@bind(vm.nome)" placeholder="Nome"
+						width="400px" onOK="@command('aplicarFiltro')" />
+					<button label="Filtrar usuário"
+						iconSclass="fas fa-filter" onClick="@command('aplicarFiltro')" />
+				</hlayout>
+				<grid model="@load(vm.usuarios)" mold="paging"
+					pageSize="10" emptyMessage="Nenhum usuário encontrado.">
+					<columns>
+						<column label="ID" align="center" width="150px" />
+						<column label="Matrícula" align="center"
+							width="150px" />
+						<column label="Nome" align="center"
+							width="250px" />
+						<column label="Setor" align="center" />
+						<column label="Ações" align="center"
+							width="230px" />
+					</columns>
+					<template name="model" var="usuario">
+						<row>
+							<label value="@load(usuario.usuarioId)" />
+							<label value="@load(usuario.matricula)" />
+							<label value="@load(usuario.nome)" />
+							<label value="@load(usuario.setor)" />
+							<div align="center">
+								<button label="Gerenciar usuário"
+									iconSclass="fas fa-edit"
+									onClick="@command('abrirModalGerenciarUsuario', visible=true, usuario=usuario)" />
+								<button label="Visualizar grupos"
+									iconSclass="fas fa-eye"
+									onClick="@command('abrirModalVisualizarGrupos', visible=true, usuario=usuario)" />
+								<button
+									label="Incluir usuário em novo grupo"
+									iconSclass="fas fa-plus-circle"
+									onClick="@command('abrirModalIncluirUsuarioEmNovoGrupo', visible=true, usuario=usuario)" />
+							</div>
+						</row>
+					</template>
+				</grid>
+			</vlayout>
+
+			<window id="modalGerenciarUsuario" mode="modal"
+				visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Gerenciar usuário"
+						sclass="custom-title" />
+					<vlayout spacing="1px" style="line-height:0px">
+						<label value="Nome:" style="font-weight:bold" />
+						<label
+							value="@load(vm.usuarioSelecionado.nome)" />
+					</vlayout>
+					<vlayout spacing="1px">
+						<label value="Matrícula:"
+							style="font-weight:bold" />
+						<label
+							value="@bind(vm.usuarioSelecionado.matricula)" />
+					</vlayout>
+					<vlayout spacing="1px">
+						<label value="Alterar senha:"
+							style="font-weight:bold" />
+						<textbox type="password"
+							value="@bind(vm.usuarioSelecionado.senha)"
+							placeholder="Nova senha" />
+						<textbox type="password"
+							value="@bind(vm.repeteSenha)" placeholder="Repita a nova senha" />
+					</vlayout>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalGerenciarUsuario', visible=false, usuario=null)" />
+						<button tooltiptext="Atualizar usuário"
+							style="font-weight:bold" label="ATUALIZAR USUÁRIO"
+							iconSclass="fas fa-edit" onClick="@command('atualizarUsuario')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalVisualizarGrupos" mode="modal"
+				width="700px" visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Visualizar grupos"
+						sclass="custom-title" />
+					<vlayout spacing="1px" style="line-height:0px">
+						<label value="Nome:" style="font-weight:bold" />
+						<label
+							value="@load(vm.usuarioSelecionado.nome)" />
+					</vlayout>
+					<vlayout spacing="1px">
+						<label value="Matrícula:"
+							style="font-weight:bold" />
+						<label
+							value="@bind(vm.usuarioSelecionado.matricula)" />
+					</vlayout>
+					<grid model="@load(vm.usuariosGrupo)" mold="paging"
+						pageSize="5" emptyMessage="Nenhum grupo encontrado.">
+						<columns>
+							<column label="Sistema" align="center" />
+							<column label="Grupo" align="center" />
+							<column label="Remover do grupo"
+								align="center" width="150px" />
+						</columns>
+						<template name="model" var="usuarioGrupo">
+							<row>
+								<label
+									value="@load(usuarioGrupo.nomeSistema)" />
+								<label
+									value="@load(usuarioGrupo.nomeGrupo)" />
+								<button
+									onClick="@command('abrirModalConfirmaRemoverDoGrupo', visible=true, usuarioGrupo=usuarioGrupo)"
+									iconSclass="fas fa-minus-circle" />
+							</row>
+						</template>
+					</grid>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalVisualizarGrupos', visible=false, usuario=null)" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalConfirmaRemoverDoGrupo" mode="modal"
+				visible="false" sclass="custom-window">
+				<vbox align="center">
+					<label value="Remover este usuário do grupo?" />
+					<label style="font-weight:bold"
+						value="@load(vm.usuarioGrupoSelecionado.grupoUsuario.nomeGrupoSistema)" />
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalConfirmaRemoverDoGrupo', visible=false, usuarioGrupo=null)" />
+						<button tooltiptext="Remover do grupo"
+							style="font-weight:bold" label="REMOVER DO GRUPO"
+							iconSclass="fas fa-minus-circle"
+							onClick="@command('removerDoGrupo')" />
+					</div>
+				</vbox>
+			</window>
+
+			<window id="modalIncluirUsuarioEmNovoGrupo" mode="modal"
+				visible="false" sclass="custom-window">
+				<vbox align="left">
+					<label value="Incluir usuário em novo grupo"
+						sclass="custom-title" />
+					<vlayout spacing="1px" style="line-height:0px">
+						<label value="Nome:" style="font-weight:bold" />
+						<label
+							value="@load(vm.usuarioSelecionado.nome)" />
+					</vlayout>
+					<vlayout spacing="1px">
+						<label value="Matrícula:"
+							style="font-weight:bold" />
+						<label
+							value="@bind(vm.usuarioSelecionado.matricula)" />
+					</vlayout>
+					<hlayout>
+						<vlayout spacing="1px">
+							<label value="Sistema:"
+								style="font-weight:bold" />
+							<combobox id="comboSistemas"
+								onSelect="@command('carregarGruposPorSistema')"
+								selectedItem="@bind(vm.sistemaSelecionado)"
+								model="@load(vm.sistemas)">
+								<template name="model" var="sistema">
+									<comboitem
+										label="@load(sistema.nome)" value="@load(sistema)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Grupo:"
+								style="font-weight:bold" />
+							<combobox id="comboGrupos"
+								selectedItem="@bind(vm.novoUsuarioGrupo.grupoUsuario)"
+								model="@load(vm.grupos)">
+								<template name="model" var="grupo">
+									<comboitem label="@load(grupo.nome)"
+										value="@load(grupo)" />
+								</template>
+							</combobox>
+						</vlayout>
+					</hlayout>
+
+					<separator />
+					<div align="center">
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							iconSclass="fas fa-times-circle"
+							onClick="@command('abrirModalIncluirUsuarioEmNovoGrupo', visible=false, usuario=null)" />
+						<button tooltiptext="Incluir usuário no grupo"
+							style="font-weight:bold" label="INCLUIR USUÁRIO NO GRUPO"
+							iconSclass="fas fa-plus-circle"
+							onClick="@command('incluirUsuarioNoGrupo')" />
+					</div>
+				</vbox>
+			</window>
+		</panelchildren>
+	</panel>
+</zk>

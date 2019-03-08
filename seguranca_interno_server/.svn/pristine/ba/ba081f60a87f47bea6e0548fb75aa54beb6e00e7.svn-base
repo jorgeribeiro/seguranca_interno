@@ -1,0 +1,234 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.servidor;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * 
+ * @author acbras
+ * 
+ *         Schema: SQLUser Tabela: RHCadServidor + RHCadPessoa +
+ *         RHCadServidorFuncional
+ *
+ */
+
+@Entity(name = Servidor.NAME)
+@Table(name = "seguranca_interno.servidor")
+public class Servidor {
+
+	public static final String NAME = "SEGURANCA_SERVIDOR";
+
+	public Servidor() {
+
+	}
+
+	public Servidor(Integer servidorId, String lotacaoContracheque, String lotacaoOrigem, Integer lotacaoExercicioId,
+			String lotacaoExercicio, String cargoFuncao, Integer matricula, String nome, String cpf,
+			Date dataNascimento, String tipoSanguineo, String doador, String email, String dataAdmissao, String sexo,
+			String telefone) {
+		super();
+		this.servidorId = servidorId;
+		this.lotacaoContracheque = lotacaoContracheque;
+		this.lotacaoOrigem = lotacaoOrigem;
+		LotacaoExercicioId = lotacaoExercicioId;
+		this.lotacaoExercicio = lotacaoExercicio;
+		this.cargoFuncao = cargoFuncao;
+		this.matricula = matricula;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
+		this.tipoSanguineo = tipoSanguineo;
+		this.doador = doador;
+		this.email = email;
+		this.dataAdmissao = dataAdmissao;
+		this.sexo = sexo;
+		this.telefone = telefone;
+	}
+
+
+
+	@Id
+	@Column(name = "servidor_id")
+	private Integer servidorId;
+
+	@Column(name = "lotacao_contracheque")
+	private String lotacaoContracheque;
+
+	@Column(name = "lotacao_origem")
+	private String lotacaoOrigem;
+
+	@Column(name = "lotacao_exercicio_id")
+	private Integer LotacaoExercicioId;
+
+	@Column(name = "lotacao_exercicio")
+	private String lotacaoExercicio;
+
+	@Column(name = "cargo_funcao")
+	private String cargoFuncao;
+	
+	@Column(name = "cargo_efetivo")
+	private String cargoEfetivo;
+
+	@Column(name = "matricula")
+	private Integer matricula;
+
+	@Column(name = "nome")
+	private String nome;
+
+	@Column(name = "cpf")
+	private String cpf;
+
+	@Column(name = "data_nascimento")
+	private Date dataNascimento;
+
+	@Column(name = "tipo_sanguineo")
+	private String tipoSanguineo;
+
+	@Column(name = "doador")
+	private String doador;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "data_admissao")
+	private String dataAdmissao;
+
+	@Column(name = "sexo")
+	private String sexo;
+
+	@Column(name = "telefone")
+	private String telefone;
+
+	public Integer getServidorId() {
+		return servidorId;
+	}
+
+	public void setServidor_id(Integer servidorId) {
+		this.servidorId = servidorId;
+	}
+
+	public Integer getMatricula() {
+		return matricula;
+	}
+
+	public void setMatricula(Integer matricula) {
+		this.matricula = matricula;
+	}
+
+	public String getLotacaoContracheque() {
+		return lotacaoContracheque;
+	}
+
+	public void setLotacaoContracheque(String lotacaoContracheque) {
+		this.lotacaoContracheque = lotacaoContracheque;
+	}
+
+	public String getLotacaoOrigem() {
+		return lotacaoOrigem;
+	}
+
+	public void setLotacaoOrigem(String lotacaoOrigem) {
+		this.lotacaoOrigem = lotacaoOrigem;
+	}
+
+	public String getLotacaoExercicio() {
+		return lotacaoExercicio;
+	}
+
+	public void setLotacaoExercicio(String lotacaoExercicio) {
+		this.lotacaoExercicio = lotacaoExercicio;
+	}
+
+	public String getCargoFuncao() {
+		return cargoFuncao;
+	}
+
+	public void setCargoFuncao(String cargoFuncao) {
+		this.cargoFuncao = cargoFuncao;
+	}
+
+	public String getCargoEfetivo() {
+		return cargoEfetivo;
+	}
+
+	public void setCargoEfetivo(String cargoEfetivo) {
+		this.cargoEfetivo = cargoEfetivo;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public String getTipoSanguineo() {
+		return tipoSanguineo;
+	}
+
+	public void setTipoSanguineo(String tipoSanguineo) {
+		this.tipoSanguineo = tipoSanguineo;
+	}
+
+	public String getDoador() {
+		return doador;
+	}
+
+	public void setDoador(String doador) {
+		this.doador = doador;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDataAdmissao() {
+		return dataAdmissao;
+	}
+
+	public void setDataAdmissao(String dataAdmissao) {
+		this.dataAdmissao = dataAdmissao;
+	}
+
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+}

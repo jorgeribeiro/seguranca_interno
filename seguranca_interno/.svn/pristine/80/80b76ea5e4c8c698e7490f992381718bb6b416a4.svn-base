@@ -1,0 +1,85 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import java.util.Collection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Window;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.sistema.Sistema;
+import br.gov.ma.tce.seguranca.interno.server.beans.sistema.SistemaFacadeBean;
+
+public class SistemaVM {
+	private Sistema novoSistema;
+
+	private Collection<Sistema> sistemas;
+
+	private SistemaFacadeBean sistemaFacade;
+
+	@Wire("#modalNovoSistema")
+	private Window modalNovoSistema;
+
+	public SistemaVM() {
+		try {
+			InitialContext ctx = new InitialContext();
+			sistemaFacade = (SistemaFacadeBean) ctx.lookup(SistemaFacadeBean.URI);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Init
+	public void init() {
+		try {
+			sistemas = sistemaFacade.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
+		Selectors.wireComponents(view, this, false);
+	}
+
+	@Command
+	@NotifyChange(".")
+	public void abrirModalNovoSistema(@BindingParam("visible") boolean visible) {
+		try {
+			if (visible) {
+				novoSistema = new Sistema();
+			}
+			modalNovoSistema.setVisible(visible);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Sistema getNovoSistema() {
+		return novoSistema;
+	}
+
+	public void setNovoSistema(Sistema novoSistema) {
+		this.novoSistema = novoSistema;
+	}
+
+	public Collection<Sistema> getSistemas() {
+		return sistemas;
+	}
+
+	public void setSistemas(Collection<Sistema> sistemas) {
+		this.sistemas = sistemas;
+	}
+
+}

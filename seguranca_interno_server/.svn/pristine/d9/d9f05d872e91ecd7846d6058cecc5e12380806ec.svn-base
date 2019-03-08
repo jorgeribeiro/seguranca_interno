@@ -1,0 +1,159 @@
+package br.gov.ma.tce.seguranca.interno.server.beans.usuariogrupo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.naming.InitialContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.sql.DataSource;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.sistema.Sistema;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+
+@Stateless
+public class UsuarioGrupoFacadeBean {
+	public static final String URI = "java:global/seguranca_ear/seguranca_interno_server/UsuarioGrupoFacadeBean!br.gov.ma.tce.seguranca.interno.server.beans.usuariogrupo.UsuarioGrupoFacadeBean";
+
+	@PersistenceContext(unitName = "seguranca_interno_server")
+	private EntityManager em;
+
+	public UsuarioGrupo insert(UsuarioGrupo usuarioGrupo) {
+
+		em.persist(usuarioGrupo);
+		return usuarioGrupo;
+	}
+
+	public UsuarioGrupo update(UsuarioGrupo usuarioGrupo) {
+		em.merge(usuarioGrupo);
+		return usuarioGrupo;
+	}
+
+	public void delete(int id) {
+
+		UsuarioGrupo usuarioGrupo = findByPrimaryKey(id);
+		em.remove(usuarioGrupo);
+	}
+
+	public void deletarUsuarioGrupo(int usuarioGrupoId, int usuarioID) {
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			InitialContext ctx = new InitialContext();
+			DataSource ds = (DataSource) ctx.lookup("java:jboss/datasources/CacheDS");
+
+			conn = ds.getConnection();
+			StringBuffer sql = new StringBuffer();
+
+			sql.append("DELETE FROM Seguranca.USUARIO_GRUPO WHERE usuario_id = " + usuarioID
+					+ " and usuario_grupo_id = " + usuarioGrupoId);
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.execute();
+
+		} catch (Exception e) {
+			System.out.println("erro na query");
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	public void deleteAllByUsuarioId(int usuarioId) {
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			InitialContext ctx = new InitialContext();
+			DataSource ds = (DataSource) ctx.lookup("java:jboss/datasources/CacheDS");
+
+			conn = ds.getConnection();
+			StringBuffer sql = new StringBuffer();
+
+			sql.append("DELETE FROM Seguranca.USUARIO_GRUPO WHERE usuario_id = " + usuarioId);
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.execute();
+
+		} catch (Exception e) {
+			System.out.println("erro na query");
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	public UsuarioGrupo findByPrimaryKey(int usuarioGrupoId) {
+		UsuarioGrupo usuarioGrupo = em.find(UsuarioGrupo.class, usuarioGrupoId);
+		return usuarioGrupo;
+	}
+
+	public Collection<UsuarioGrupo> findAllByGrupoUsuarioId(int grupoUsuarioId, int sistemaId) {
+		Query q = em.createQuery("select ug from " + UsuarioGrupo.NAME + " ug where ug.grupo_usuario_id = "
+				+ grupoUsuarioId + " and ug.sistema_id = " + sistemaId
+				+ " order by ug.transacao.subgrupoTransacao.subgrupoTransacaoId");
+		Collection<UsuarioGrupo> permissoes = new ArrayList<UsuarioGrupo>();
+		for (Object o : q.getResultList()) {
+			permissoes.add((UsuarioGrupo) o);
+		}
+		return permissoes;
+	}
+
+	public List<UsuarioGrupo> findAll() {
+		Query q = em.createQuery("select ug from " + UsuarioGrupo.NAME + " ug ");
+		List<UsuarioGrupo> permissoes = new ArrayList<UsuarioGrupo>();
+		for (Object o : q.getResultList()) {
+			permissoes.add((UsuarioGrupo) o);
+		}
+		return permissoes;
+	}
+
+	public UsuarioGrupo findUsuarioGrupoByFuncionario(int funcionarioId) {
+		Query q = em.createQuery("select ug from " + UsuarioGrupo.NAME
+				+ " ug where grupoUsuarioId = 23 or grupoUsuarioId = 65  and usuario.funcionarioId =:funcionarioId ");
+		q.setParameter("funcionarioId", funcionarioId);
+		return (UsuarioGrupo) q.getSingleResult();
+	}
+
+	public Collection<UsuarioGrupo> findGruposByUsuario(Usuario usuario) {
+		Query q = em
+				.createQuery("select u from " + UsuarioGrupo.NAME
+						+ " u where u.usuario=:arg0 order by u.grupoUsuario.sistema.nome, u.grupoUsuario.nome")
+				.setParameter("arg0", usuario);
+		Collection<UsuarioGrupo> grupos = new ArrayList<UsuarioGrupo>();
+		for (Object o : q.getResultList()) {
+			grupos.add((UsuarioGrupo) o);
+		}
+		return grupos;
+	}
+
+	public Collection<UsuarioGrupo> findUsuariosBySistema(Sistema sistema) {
+		Query q = em
+				.createQuery("select u from " + UsuarioGrupo.NAME
+						+ " u where u.grupoUsuario.sistema=:arg0 order by u.usuario.servidor.nome")
+				.setParameter("arg0", sistema);
+		Collection<UsuarioGrupo> grupos = new ArrayList<UsuarioGrupo>();
+		for (Object o : q.getResultList()) {
+			grupos.add((UsuarioGrupo) o);
+		}
+		return grupos;
+	}
+
+}

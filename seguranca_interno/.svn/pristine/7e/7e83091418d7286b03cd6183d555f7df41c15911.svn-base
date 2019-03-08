@@ -1,0 +1,110 @@
+<?page title="Organograma - Tribunal de Contas do Estado do Maranhão" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/imagens/favicon.ico"?>
+
+<zk>
+	<window id="win" border="none" width="640px"
+		apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') 
+		@init('br.gov.ma.tce.seguranca.pages.ListaOrganogramaPlenoVM')">
+		
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Conselheiro Presidente" />
+				</listhead>
+				<listitem height="30px">
+<!-- 03/01/2016		<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="João Jorge Jinkings Pavão" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="José de Ribamar Caldas Furtado" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Conselheiros" />
+				</listhead>
+				<listitem height="30px">
+<!-- 					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Raimundo Oliveira Filho" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Raimundo Nonato de Carvalho Lago Júnior" />
+				</listitem>
+				<listitem height="30px">
+<!-- 					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Álvaro César de França Ferreira" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Alvaro César de França Ferreira" />
+				</listitem>
+				<listitem height="30px">
+<!-- 					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Raimundo Nonato de Carvalho Lago Júnior" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Joaquim Washington Luiz de Oliveira" />
+				</listitem>
+				<listitem height="30px">
+<!-- 					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Edmar Serra Cutrim" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Raimundo Oliveira Filho" />
+				</listitem>
+				<listitem height="30px">
+<!-- 					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="José de Ribamar Caldas Furtado" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="João Jorge Jinkings Pavão" />
+				</listitem>
+				<listitem height="30px">
+<!-- 					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Joaquim Washington Luiz de Oliveria" /> -->
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Edmar Serra Cutrim" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Conselheiros-Substitutos" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Antônio Blecaute Costa Barbosa" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Melquizedeque Nava Neto" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Osmário Freire Guimarães" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Procurador Geral" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Douglas Paulo da Silva" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Procuradores" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Jairo Cavalcanti Vieira" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Flávia Gonzalez Leite" />
+				</listitem>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="Paulo Henrique Araujo dos Reis" />
+				</listitem>
+			</listbox>
+		</hbox>
+
+		<hbox>
+			<listbox width="640px">
+				<listhead>
+					<listheader label="Secretário" />
+				</listhead>
+				<listitem height="30px">
+					<listcell style="line-height:110%;font-size:9pt;word-wrap:normal" label="@load(vm.servidor.nome)" />
+				</listitem>
+			</listbox>
+		</hbox>
+	</window>
+</zk>

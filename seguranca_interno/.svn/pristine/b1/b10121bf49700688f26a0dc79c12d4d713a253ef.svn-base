@@ -1,0 +1,153 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.zk.ui.Sessions;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.Servidor;
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.ServidorFacadeBean;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.Usuario;
+import br.gov.ma.tce.seguranca.interno.server.beans.usuario.UsuarioFacadeBean;
+import br.gov.ma.tce.seguranca.server.beans.funcionario.Funcionario;
+import br.gov.ma.tce.seguranca.server.beans.funcionario.FuncionarioFacadeBean;
+
+public class IndexVM {
+	private Usuario usuario;
+
+	private ServidorFacadeBean servidorFacadeBean;
+	private UsuarioFacadeBean usuarioFacadeBean;
+	private FuncionarioFacadeBean funcionarioFacadeBean;
+	private br.gov.ma.tce.seguranca.server.beans.usuario.UsuarioFacadeBean usuarioSegFacadeBean;
+
+	public IndexVM() {
+		try {
+			InitialContext ctx = new InitialContext();
+			servidorFacadeBean = (ServidorFacadeBean) ctx.lookup(ServidorFacadeBean.URI);
+			usuarioFacadeBean = (UsuarioFacadeBean) ctx.lookup(UsuarioFacadeBean.URI);
+			funcionarioFacadeBean = (FuncionarioFacadeBean) ctx.lookup(FuncionarioFacadeBean.JNDI_SEGURANCA);
+			usuarioSegFacadeBean = (br.gov.ma.tce.seguranca.server.beans.usuario.UsuarioFacadeBean) ctx
+					.lookup(br.gov.ma.tce.seguranca.server.beans.usuario.UsuarioFacadeBean.JNDI_SEGURANCA);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Init
+	public void init() {
+		usuario = (Usuario) Sessions.getCurrent().getAttribute("usuario");
+	}
+
+	@Command
+	public void verificarNovosUsuarios() {
+		try {
+			Integer maxIdServidor = servidorFacadeBean.findMaxId();
+			Integer maxIdFuncionario = funcionarioFacadeBean.findMaxId();
+
+			// Se for diferente, quer dizer que existem funcionários novos
+			if (maxIdServidor != maxIdFuncionario) {
+				// Percorre cada um dos novos IDs e instancia um novo servidor e usuário
+				for (int i = maxIdServidor + 1; i <= maxIdFuncionario; i++) {
+					Funcionario f = funcionarioFacadeBean.findById(i);
+					if (f != null) {
+						// Novo servidor
+						Servidor novoServidor = copiaFuncionario(f);
+						servidorFacadeBean.insert(novoServidor);
+						// Novo usuário
+						br.gov.ma.tce.seguranca.server.beans.usuario.Usuario u = usuarioSegFacadeBean
+								.findByLogin(novoServidor.getMatricula().toString());
+						Usuario novoUsuario = copiaUsuario(u, novoServidor);
+						usuarioFacadeBean.insert(novoUsuario);
+						
+						// Buscar grupos
+					}
+
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Servidor copiaFuncionario(Funcionario funcionario) {
+		Servidor novoServidor = new Servidor();
+		if (funcionario.getCodigo() != null) {
+			novoServidor.setServidorId(funcionario.getCodigo());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getLotacaoContracheque() != null) {
+			novoServidor.setLotacaoContracheque(
+					funcionario.getFuncionarioFuncional().getLotacaoContracheque().getDescricao());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getLotacaoOrigem() != null) {
+			novoServidor.setLotacaoOrigem(funcionario.getFuncionarioFuncional().getLotacaoOrigem().getDescricao());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getLotacaoExercicio() != null) {
+			novoServidor
+					.setLotacaoExercicio(funcionario.getFuncionarioFuncional().getLotacaoExercicio().getDescricao());
+			novoServidor.setSetorSigla(funcionario.getFuncionarioFuncional().getLotacaoExercicio().getSigla());
+			novoServidor.setLotacaoExercicioId(funcionario.getFuncionarioFuncional().getLotacaoExercicio().getId());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getCargoFuncao() != null) {
+			novoServidor.setCargoFuncao(funcionario.getFuncionarioFuncional().getCargoFuncao().getDescricao());
+		}
+
+		if (funcionario.getFuncionarioFuncional().getCargoEfetivo() != null) {
+			novoServidor.setCargoEfetivo(funcionario.getFuncionarioFuncional().getCargoEfetivo().getDescricao());
+		}
+
+		if (funcionario.getMatricula() != null) {
+			novoServidor.setMatricula(funcionario.getMatricula());
+		}
+
+		if (funcionario.getNome() != null) {
+			novoServidor.setNome(funcionario.getNomeFuncionario());
+		}
+
+		if (funcionario.getPessoa() != null) {
+			novoServidor.setCpf(funcionario.getPessoa().getCpf());
+			novoServidor.setDataNascimento(funcionario.getPessoa().getDataNascimento());
+			novoServidor.setTipoSanguineo(funcionario.getPessoa().getTipoSanguineoFormatado());
+			novoServidor.setDoador(funcionario.getPessoa().getDoadorFormatado());
+			novoServidor.setEmail(funcionario.getPessoa().getEmail());
+			novoServidor.setDataAdmissao(funcionario.getPessoa().getDataAdmissao());
+			novoServidor.setSexo(funcionario.getPessoa().getSexoFormatado());
+			novoServidor.setTelefone(funcionario.getPessoa().getTelefone());
+		}
+
+		return novoServidor;
+	}
+
+	public Usuario copiaUsuario(br.gov.ma.tce.seguranca.server.beans.usuario.Usuario usuario, Servidor s) {
+		Usuario novoUsuario = new Usuario();
+		if (usuario.getUsuarioId() != null) {
+			novoUsuario.setUsuarioId(usuario.getUsuarioId());
+		}
+
+		if (usuario.getMatricula() != null) {
+			novoUsuario.setMatricula(usuario.getMatricula());
+		}
+
+		if (usuario.getSenha() != null) {
+			novoUsuario.setSenha(usuario.getSenha());
+		}
+
+		novoUsuario.setServidor(s);
+
+		return novoUsuario;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+}

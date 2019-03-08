@@ -1,0 +1,83 @@
+package br.gov.ma.tce.seguranca.pages;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.select.Selectors;
+
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.Servidor;
+import br.gov.ma.tce.seguranca.interno.server.beans.servidor.ServidorFacadeBean;
+
+public class ListaOrganogramaVM {
+
+	private Collection<Servidor> servidores;
+	private Servidor servidor;
+	private ServidorFacadeBean servidorFacadeBean;
+
+	public ListaOrganogramaVM() {
+		try {
+			InitialContext ctx = new InitialContext();
+			servidorFacadeBean = (ServidorFacadeBean) ctx.lookup(ServidorFacadeBean.URI);
+
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Init
+	public void init() {
+		servidores = new ArrayList<Servidor>();
+		// TODO de onde vem id
+		String id = Executions.getCurrent().getParameter("id");
+
+		servidores = new ArrayList<Servidor>();
+
+		try {
+			if (Integer.valueOf(id) == 146 || Integer.valueOf(id) == 25 || Integer.valueOf(id) == 193) {
+				servidores = servidorFacadeBean.findBySetorAndComissionadoSacex(Integer.valueOf(id));
+			} else if (Integer.valueOf(id) == 157) {
+				servidores = servidorFacadeBean.findBySetorAndComissionado2(Integer.valueOf(id), 202);
+			} else if (Integer.valueOf(id) == 145) {
+				servidores = servidorFacadeBean.findBySetorAndComissionado2(Integer.valueOf(id), 213);
+			} else if (Integer.valueOf(id) == 260) {
+				servidores = servidorFacadeBean.findBySetorAndComissionado2(Integer.valueOf(id), 6);
+			} else {
+				servidores = servidorFacadeBean.findBySetorAndComissionado(Integer.valueOf(id));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			servidores = new ArrayList<Servidor>();
+		}
+	}
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
+		Selectors.wireComponents(view, this, false);
+	}
+
+	public Collection<Servidor> getServidores() {
+		return servidores;
+	}
+
+	public void setServidores(Collection<Servidor> servidores) {
+		this.servidores = servidores;
+	}
+
+	public Servidor getServidor() {
+		return servidor;
+	}
+
+	public void setServidor(Servidor servidor) {
+		this.servidor = servidor;
+	}
+
+}
